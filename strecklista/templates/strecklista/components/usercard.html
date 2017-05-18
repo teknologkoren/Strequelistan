@@ -1,0 +1,53 @@
+{% comment %}
+Context:
+    user: hash
+      id: int
+      first_name: str
+      last_name: str
+      nickname: str or None
+
+    drinks: list of hash
+      id: int
+      name: str
+{% endcomment %}
+<div class="card">
+  <div class="name">
+    <a class="profile" href="/profile/{{user.id}}">
+      {{user.display_name}}
+    </a>
+    <span class="alcometer" data-toggle="tooltip" data-placement="right" title="{{ user.alcohol }}‰">
+      {% if user.alcohol == 0 %} {# Don't show anything if at 0 #}
+      {% elif user.alcohol < 0.2 %}
+      🍺
+      {% elif user.alcohol < 0.5 %}
+      🍻
+      {% elif user.alcohol < 1 %}
+      👌
+      {% elif user.alcohol < 1.5 %}
+      🕺
+      {% elif user.alcohol < 2 %}
+      😟
+      {% elif user.alcohol < 3 %}
+      🤢
+      {% elif user.alcohol < 5 %}
+      😵
+      {% elif user.alcohol < 7 %}
+      💀
+      {% elif user.alcohol < 10 %}
+      🇷🇺
+      {% else %}
+      🇫🇮
+      {% endif %}
+    </span>
+  </div>
+  <div class="drinks">
+    {% for drink in drinks %}
+      <form method="post" class="drink">
+        {% csrf_token %}
+        <input type="hidden" value="{{user.id}}" name="userId">
+        <input type="hidden" value="{{drink.id}}" name="priceGroup">
+        <input type="button" value="{{drink.name}}" class="transactionSubmit">
+      </form>
+    {% endfor %}
+  </div>
+</div>

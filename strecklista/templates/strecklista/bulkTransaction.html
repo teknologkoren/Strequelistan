@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% include "strecklista/snippets/head_content.html" %}
+
+</head>
+
+<body>
+
+
+<script>
+
+   function updateTransactionName() {
+
+    $('input').filter(function() {
+        return this.id.match(/.*message/);
+    })
+    .val($('#transactionName').val())
+    ;
+    }
+</script>
+
+<!--Navigation bar -->
+{% include "strecklista/snippets/navbar.html" %}
+
+<!-- Page Content -->
+<div class="container">
+    <div class="row">
+        <div class="col-md-12"><h1>Bulk transaktioner</h1></div>
+        <div class="col-md-12"><h3>Här kan du som admin lägga till/ta bort pengar från folk</h3></div>
+        {% if only_active %}
+        <div class="col-md-12"><a href="/bulkTransactions/">Visa alla användare</a></div>
+        {% else %}
+        <div class="col-md-12"><a href="/bulkTransactions/?active=true">Visa endast aktiva korister</a></div>
+        {% endif %}
+    </div>
+
+    Transaktionsnamn <input id="transactionName" onchange="updateTransactionName();"
+onkeyup="this.onchange();" onpaste="this.onchange();" oninput="this.onchange();"/>
+
+    {% if state %}
+        <p color="red">{{state}}</p>
+    {% endif %}
+
+
+    {% if formset%}
+
+    <form action="/bulkTransactions/", method="POST", class="bulkTransactionForm">
+        {{ formset.management_form }}
+        {% csrf_token %}
+        <div class="container">
+        {% for form in formset %}
+            <div class="row">
+                <div class="col-md-3">{{form.amount.label}}</div>
+                <div class="col-md-3">{{form.amount}}</div>
+                <div class="col-md-3">{{form.message.label}}</div>
+                <div class="col-md-3">{{form.message}}</div>
+            </div>
+            {{form.user_id}}
+        {% endfor %}
+        </div>
+    <button id="submitBulkTransactions">Submit all</button>
+    {% endif %}
+
+
+</div>
+</body>
+
+</html>

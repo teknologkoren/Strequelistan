@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% include "strecklista/snippets/head_content.html" %}
+
+</head>
+
+<body>
+
+<script>
+
+  $( document ).ready(function() {
+     $('.register_link').click(function(e){
+      e.preventDefault();
+
+
+
+      $.ajax({
+           url: $(this).attr('href'),
+           type: "GET",//type of posting the data
+           success: function (data) {
+             if(data == "Success"){
+                 e.target.closest('.row').remove();
+             }
+             else{
+                 alert(data);
+             }
+           },
+           error: function(xhr, ajaxOptions, thrownError){
+               alert("Communication error");
+              //what to do in error
+           },
+           timeout : 15000//timeout of the ajax call
+      });
+
+
+
+    });
+  });
+
+</script>
+
+
+<!--Navigation bar -->
+{% include "strecklista/snippets/navbar.html" %}
+
+<!-- Page Content -->
+<div class="container">
+    <div class="row">
+        <div class="col-md-12"><h1>Verktyg</h1></div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <p>
+                Lite blandade verktyg som gör QM's liv lite lättare
+            </p>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <h2>Generera en analog strequelista</h2>
+        <form action="/pdf/" method="GET" id="PDFForm">
+            {% csrf_token %}
+            <label>Endast aktiva korister </label> <input type="checkbox" name="active" value="true">
+
+            <input type="submit" value="Skapa PDF">
+
+        </form>
+    </div>
+    <div class="row">
+        <h2>Skicka ett mail till alla med negativt saldo</h2>
+        <form action="/admintools/" method="post" id="PDFForm">
+            {% csrf_token %}
+            <input type="hidden" name="balanceEmail" value="true">
+            <input type="submit" value="Spamma kören">
+            {% if balanceEmailStatus %} <p style="color:red">{{ balanceEmailStatus }}</p> {% endif %}
+
+        </form>
+    </div>
+    {% if registerRequests %}
+    <div class="row">
+      <h2>Personer som vill ha access till Strequelistan</h2>
+      <div class="row">
+        <div class="col-md-3"><b>Namn</b></div>
+        <div class="col-md-3"><b>Email</b></div>
+        <div class="col-md-4"><b>Meddelande</b></div>
+        <div class="col-md-2"></div>
+      </div>
+      {% for rq in registerRequests %}
+      <div class="row">
+        <div class="col-md-3">{{ rq.first_name }} {{ rq.last_name }}</div>
+        <div class="col-md-3">{{ rq.email }}</div>
+        <div class="col-md-4">{{ rq.message }}</div>
+        <div class="col-md-2"><a class="register_link" href="/acceptRegisterRequest?id={{ rq.id }}">Acceptera</a>  <a class="register_link" href="/denyRegisterRequest?id={{ rq.id }}">Neka</a></div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+</div>
+</body>
+
+</html>

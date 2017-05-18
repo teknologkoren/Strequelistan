@@ -1,0 +1,28 @@
+<div class="transactionrow" id="transactionrow">
+  <h2>Transaktionshistorik</h2>
+  {% if not transactions %}
+    Inga transaktioner finns att visa.
+  {% else %}
+    {% for transaction in transactions %}
+      <div class="card">
+        <div>
+          <span class="name">
+            {{transaction.user.first_name}} {{transaction.user.last_name}}
+          </span>
+          <div class="category">{{transaction.timestamp}}</div>
+        </div>
+        <div class="spacer"></div>
+        <div class="block">
+          <div class="price">{{transaction.amount}}</div>
+          <form action="/returnTransaction/" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="transaction_id" value="{{transaction.id}}">
+            <button class="returnTransaction">
+              <i class="material-icons">close</i>
+            </button>
+          </form>
+        </div>
+      </div>
+    {% endfor %}
+  {% endif %}
+</div>

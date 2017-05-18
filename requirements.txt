@@ -1,0 +1,17 @@
+django>=1.9
+django-livereload-server==0.2.3
+django-widget-tweaks==1.4.1
+
+# Image processing
+Pillow==4.0.0
+
+# Api stuff
+djangorestframework==3.6.2
+markdown==2.6.8
+django-filter==1.0.2
+
+# Code formatting
+yapf==0.16.1
+
+django-extensions==1.7.8 #Gives access to a nicer shell with models already imported (shell_plus)
+django-progressive-web-app==0.1

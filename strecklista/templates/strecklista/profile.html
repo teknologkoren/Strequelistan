@@ -1,0 +1,150 @@
+{% extends 'strecklista/base.html' %}
+
+{% block content %}
+{% include "strecklista/snippets/navbar.html" %}
+<style>
+.avatar {
+  align-items: center;
+  background-position: center;
+  background-size: cover;
+  color: #999;
+  display: flex;
+  font-size: 30px;
+  justify-content: center;
+  min-height: 300px;
+  text-align: center;
+}
+</style>
+<div class="container">
+  <div class="row">
+    <div class="col-md-6"><div class="row">
+      {% if user.avatar %}
+        <a href="{{ user.avatar.url }}">
+          <div class="avatar" style="background-image:url({{user.avatar.url}})"></div>
+        </a>
+      {% else %}
+        <div class="avatar" style="background-color:#ccc">
+          &#128546;<br>Ingen bild.
+        </div>
+      {% endif %}
+      {% if edit_form %}
+        <div class="form-group" style="padding:15px;padding-bottom:0;">
+          <label>Profilbild</label>
+          {% load widget_tweaks %}
+          {{edit_form.avatar | attr:"class:form-control"}}
+        </div>
+      {% endif %}
+    </div></div>
+    <div class="col-md-6">
+      <h1>
+        {{user.first_name}}
+        {% if user.nickname %}"{{user.nickname}}"{% endif %}
+        {{user.last_name}}
+      </h1>
+      {% if edit_form %}
+        <form action="" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <input type="hidden" name="user_id" value="{{user.id}}">
+          <div class="form-group">
+            <label>Smeknamn</label>
+            <input class="form-control" name="nickname" value="{{user.nickname}}">
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input class="form-control" name="email" value="{{user.email}}">
+          </div>
+          <div class="form-group">
+            <label>Telefonnummer</label>
+            <input class="form-control" name="phone_number" value="{% if user.phone_number %}{{user.phone_number}}{% endif %}">
+          </div>
+          <div class="form-group">
+            <label>Lösenord</label>
+            <input class="form-control" type="password" name="password">
+          </div>
+          <div class="form-group">
+            <label>{{ edit_form.weight.label }}</label>
+            <input class="form-control" id="id_weight" name="weight" step="0.1" type="number" value="{{ user.weight }}"/>
+          </div>
+          <div class="form-group">
+            <label>{{ edit_form.y_chromosome.label }}</label>
+            <select class="form-control" id="id_y_chromosome" name="y_chromosome" required="">
+            <option value="y"{% if user.y_chromosome == True %} selected="selected" {% endif %}>Jag har en y-kromosom</option>
+            <option value="not_y" {% if user.y_chromosome == False %} selected="selected" {% endif %}>Jag har inte en y-kromosom</option>
+            <option value="none" {% if user.y_chromosome == None %} selected="selected" {% endif %}>Vill ej uppge</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <a class="btn btn-default" href="/profile/{{user.id}}">Tillbaka</a>
+            <input class="btn btn-primary pull-right" type="submit" value="Uppdatera">
+          </div>
+        </form>
+      {% else %}
+        <div class="form-group">
+          <label>Email</label>
+          <div>
+            {% if user.email %}
+              <a href="mailto:{{user.email}}">{{user.email}}</a>
+            {% else %}
+              <p>n/a</p>
+            {% endif %}
+          </div>
+        </div>
+          <div class="form-group">
+            <label>Telefonnummer</label>
+            <div>
+              {% if user.phone_number %}
+                <a href="tel:{{user.phone_number}}">{{user.phone_number}}</a>
+              {% else %}
+                <p>n/a</p>
+              {% endif %}
+            </div>
+          </div>
+        {% if can_edit %}
+          <div class="form-group">
+            <label>Saldo</label>
+            <div><p>{{user.balance}} kr</p></div>
+          </div>
+        {% endif %}
+           {% if imageForm %}
+              <form action="/updateProfileImage/" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ imageForm.avatar }}
+                  <input type="hidden" name="id" value="{{ user.id }}">
+                <input type="submit" value="uppdatera bild">
+              </form>
+           {% endif %}
+        {% if can_edit %}
+          <div class="form-group">
+            <a class="btn btn-primary pull-right" href="/profile/{{user.id}}?edit=true">Redigera</a>
+          </div>
+          <div class="clearfix" style="padding-bottom:15px"></div>
+        {% endif %}
+        {% if transactions %}
+          <h2>Transaktionshistorik</h2>
+          {% if all_history %}
+            <a href="/profile/{{user.id}}/"><h3>Mindre historik</h3></a>
+          {% else %}
+            <a href="/profile/{{user.id}}/?all_history=true"><h3>Visa all historik</h3></a>
+          {% endif %}
+          {% for transaction in transactions %}
+            <div class="row" style="padding-bottom: 3px; border-bottom: 1px #ddd solid;">
+              <br>
+              <div class="col-md-4">
+                {{transaction.message}}
+              </div>
+              <div class="col-md-4">
+                {{transaction.amount}} kr
+              </div>
+              <div class="col-md-4">
+                {{transaction.timestamp}}
+              </div>
+              <br>
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

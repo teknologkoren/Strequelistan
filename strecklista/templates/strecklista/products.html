@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% include "strecklista/snippets/head_content.html" %}
+
+</head>
+
+<body>
+
+
+
+
+<!--Navigation bar -->
+{% include "strecklista/snippets/navbar.html" %}
+
+<!-- Page Content -->
+<div class="container">
+
+
+
+
+    <div class="row">
+        <div class="col-md-12"><h1>Priskategorier</h1></div>
+    </div>
+
+    {% if price_group_list%}
+
+        {% for group in price_group_list  %}
+            <div class="row">
+                <div class="col-md-12" style="margin-bottom:10px">
+                    <h3>{{group.name}}</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8" style="margin-bottom:10px">
+                    Baspris
+                </div>
+                <div class="col-md-4" style="margin-bottom:10px">
+                    {{group.defaultPrice}}
+                </div>
+            </div>
+            <div class="row">
+
+                {% for limit in group.priceLimits.all  %}
+                    <div class="col-md-8">
+                        under {{limit.limit}}kr
+                    </div>
+                    <div class="col-md-4">
+                        Prisökningsfaktor : {{limit.multiplier}}
+                    </div>
+                {% endfor %}
+            </div>
+
+
+        {% endfor  %}
+
+    {% endif %}
+
+
+    <div class="row">
+        <div class="col-md-12"><h1>Produkter</h1></div>
+    </div>
+
+    {% if product_list and product_category_list%}
+        {% for category in product_category_list  %}
+            <div class="row">
+                <div class="col-md-12" style="margin-bottom:10px">
+                    <h2>{{category.name}}</h2>
+                    {% if category.description != "" %}<p>{{category.description}}</p> {% endif %}
+                </div>
+            </div>
+
+            {% for product in product_list  %}
+                {% if product.productCategory == category %}
+                    <div class="row" style="padding-bottom: 3px; border-bottom: 1px #ddd solid;">
+                        <div class="row">
+                            <div class="col-md-8">
+                                {{product.name}} {% if product.description != "" %} - {{product.description}} {% endif %}
+                            </div>
+                            <div class="col-md-4">
+                                <p>{{product.priceGroup.name}}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor  %}
+
+        {% endfor  %}
+
+    {% endif %}
+</div>
+</body>
+
+</html>

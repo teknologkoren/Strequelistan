@@ -1,0 +1,143 @@
+{% extends 'strecklista/base.html' %}
+{% block content %}
+<style>
+{%include 'strecklista/components/usercard.css' %}
+</style>
+<script>
+  $(function() {
+    var $body = $('body');
+
+    handleClick('.transactionSubmit', '/transaction/');
+    handleClick('.returnTransaction', '/returnTransaction/');
+
+    function handleClick(target, path) {
+      $(target).on('click', function(e) {
+        e.preventDefault();
+
+        var $form = $(this.parentElement);
+        $form.prop('disabled', true);
+
+        $.ajax({
+            type: 'POST',
+            url: path,
+            data: new FormData($form[0]),
+            processData: false,
+            contentType: false,
+            error: logAjaxError,
+        }).then(function (data) {
+          $body.css('background-color', 'green');
+          setTimeout(function() {
+            $body.css('background-color', 'white');
+          }, 500);
+        }).always(function () {
+          $form.prop('disabled', false);
+          refreshTransactions();
+          refreshAlert();
+        });
+      });
+    }
+
+    function refreshAlert() {
+      $('#balanceAlertContainer').load('/ #balanceAlertContainer div', function() {});
+    }
+    function refreshTransactions() {
+      $('#transactionrow').load('/ #transactionrow div, #transactionrow h2', function() {
+        // All returnTransaction buttons have been replaced with new ones. Make
+        // sure to handle clicks for these new buttons also.
+        handleClick('.returnTransaction', '/returnTransaction/');
+      });
+    }
+
+    function logAjaxError(jqXHR, textStatus, errorThrown) {
+      console.log(JSON.stringify(jqXHR));
+      console.log('AJAX error: ' + textStatus + ' : ' + errorThrown);
+    }
+  });
+</script>
+{% include "strecklista/snippets/navbar.html" %}
+<div class="container">
+
+  <div id="balanceAlertContainer">
+      {% if user.balance < 100 %}
+        <div class="alert {% if user.balance < 0 %}alert-danger{% else %}alert-warning{% endif %}">
+          Det {% if user.balance < 0 %}finns inga{% else %}är ont om{% endif %} pengar på kontot. Dags att fylla på?
+        </div>
+      {% endif %}
+  </div>
+  <div class="row">
+    <div class="col-md-12"><h1>Strequelistan</h1></div>
+  </div>
+  {%if quote%}
+  <blockquote>
+    {{quote.text}}
+    <p style="font-style: italic;text-align: right;">&mdash; {{quote.who}}</p>
+  </blockquote>
+  {% endif %}
+  <div class="row">
+    <div class="col-md-7">
+      <h2>Inloggad användare</h2>
+      {%include 'strecklista/components/usercard.html' with user=current_user drinks=price_group_list %}
+
+      {% if group_list and user_list and price_group_list %}
+        {% for group in group_list %}
+          <h3>{{group.name}}</h3>
+          {% for user in user_list %}
+            {% if group == user.group %}
+              {%include 'strecklista/components/usercard.html' with user=user drinks=price_group_list %}
+            {% endif %}
+          {% endfor %}
+        {% endfor %}
+      {% endif %}
+    </div>
+    <div class="col-md-3">
+      {# Render price list. #}
+      {% if product_category_list and product_list %}
+        <h3>Prislista</h3>
+          {% for pc in product_category_list %}
+            <h4>{{pc.name}}</h4>
+            {% for p in product_list %}
+              {% if p.productCategory == pc %}
+                <div class="row">
+                  <div class="col-md-8">
+                    <p>{{p.name}}</p>
+                  </div>
+                  <div class="col-md-4">
+                    <p>{{p.priceGroup.name}} ({{p.priceGroup.defaultPrice}}kr*)</p>
+                  </div>
+                </div>
+              {% endif %}
+            {% endfor %}
+          {% endfor %}
+        *Standardpriser, kan ändras beroende på ditt nuvarande saldo
+        {% endif %}
+      </div>
+  </div>
+  <div class="container">
+    <div class="row transactionrow" id="transactionrow">
+      {% if transaction_list %}
+        <h2>Transaktionshistorik</h2>
+        {% for transaction in transaction_list %}
+            <div class="row" style="padding-bottom: 3px; border-bottom: 1px #ddd solid;">
+              <div class="col-md-4">
+                {{transaction.user.first_name}} {{transaction.user.last_name}}
+              </div>
+              <div class="col-md-2">
+                {{transaction.amount}} kr
+              </div>
+              <div class="col-md-2">
+                {{transaction.timestamp}}
+              </div>
+              <div class="col-md-2">
+                <form action="/returnTransaction/" method="POST">
+                  {% csrf_token %}
+                  <input type="hidden" name="transaction_id" value="{{transaction.id}}">
+                  <button class="returnTransaction">Returnera</button>
+                </form>
+              </div>
+            </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+<h2>Dryckeslista</h2>
+{% if not categories %}
+  Det finns inga produkter att visa.
+{% else %}
+  {% for category in categories %}
+    <h3>{{category.name}}</h3>
+    {% for product in category.products %}
+      <div class="card">
+        {% if product.url %}
+          <img class="img" src="{{product.url}}" />
+        {% endif %}
+        <div>
+          <span class="name">{{product.name}}</span>
+          <div class="category">{{product.category}}</div>
+        </div>
+        <div class="spacer"></div>
+        <div class="price">{{product.price}}</div>
+      </div>
+    {% endfor %}
+  {% endfor %}
+  <p>
+    *Standardpriser, kan ändras beroende på ditt saldo.
+  </p>
+{% endif %}

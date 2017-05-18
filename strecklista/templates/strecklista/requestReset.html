@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% include "strecklista/snippets/head_content.html" %}
+
+</head>
+
+<body>
+
+
+<!-- Page Content -->
+<div class="container">
+    <h1>Strecklistan - Återställ lösenord</h1>
+    <br>
+    <br>
+
+    {% if resetForm %}
+
+    <form class="form-signin" action="" method="post">
+        {% csrf_token %}
+        <label>Email: </label><input name="email">
+        </br>
+        </br>
+        <input type="submit" value="Återställ lösenord">
+
+     </form>
+
+    {% else %}
+        Please check your email for the reset link
+    {% endif %}
+</div>
+<!-- /.container -->
+
+</body>
+
+</html>

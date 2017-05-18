@@ -1,0 +1,52 @@
+.card {
+	align-items: center;
+	box-shadow: 0 1px 5px 0 rgba(0,0,0,.3);
+	display: flex;
+	flex: 1;
+	margin: 1em .5em;
+	padding: 1em;
+  border-radius: 2px;
+  justify-content: space-between;
+}
+
+.block {
+  align-items: center;
+  display: flex;
+}
+
+.card .name,
+.card .drinks {
+  display: flex;
+  flex: 1;
+  align-items: center;
+}
+
+.profile {
+    margin: 5px;
+}
+
+.profile,
+.alcometer {
+  font-size: 16px;
+}
+
+
+.drinks {
+  {# List items right to left. #}
+  flex-direction: row-reverse;
+  flex-wrap: wrap;
+}
+
+.drink {
+  display: inline-block;
+}
+
+.card input[type='button'],
+.card button {
+  background: #f0f0f0;
+  border-radius: 2px;
+  border: none;
+  margin: 4px;
+  min-height: 40px;
+  min-width: 40px;
+}

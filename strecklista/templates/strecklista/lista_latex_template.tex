@@ -1,0 +1,39 @@
+%\documentclass[a4paper, onecolumn]{article}
+\documentclass[a4paper, twocolumn]{article}
+
+%1 column
+%\def \tableNameWidth {p{15cm}}
+
+%2 columns
+\def \tableNameWidth {p{7cm}}
+
+%% Language and font encodings
+%% Sets page size and margins
+
+\usepackage[utf8]{inputenc}
+\usepackage[a4paper,top=3cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+\usepackage{longtable}
+\title{Strequelista}
+\date{}
+
+\begin{document}
+\maketitle
+
+
+{% if group_list and user_list%}
+    {% for group in group_list %}
+        \subsection*{% templatetag openbrace %}{{group.name}}{% templatetag closebrace %}
+        \begin{tabular}{|\tableNameWidth|}
+        \hline
+        {% for user in user_list %}
+            {% if group == user.group %}
+                {{user.first_name}} {{user.last_name}}\\
+                \hline
+            {% endif %}
+        {% endfor %}
+        \end{tabular}
+    {% endfor %}
+{% endif %}
+
+
+\end{document}

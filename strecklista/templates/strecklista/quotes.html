@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% include "strecklista/snippets/head_content.html" %}
+
+</head>
+
+<body>
+
+<script>
+    $( document ).ready(function() {
+        console.log("loading done")
+
+        $('.quoteSubmit').on('click', function(e) {
+
+            $(this).prop('disabled', true);
+            console.log("someone clicked on a buy button!!");
+            e.preventDefault();
+
+            $('#quoteFormStatus').text("Submitting")
+
+            data = {};
+            data.name = $(this).siblings( "input[name*='name']").val();
+            data.text = $(this).siblings( "input[name*='text']").val();
+            data.csrfmiddlewaretoken = $(this).siblings( "input[name*='csrfmiddlewaretoken'] ").val();
+
+            $.ajax({
+                type : 'POST',
+                url  : '/submitQuote/',
+                data: data,
+                success: function(data){
+                    console.log(data);
+
+                    $('#quoteFormStatus').text(data)
+
+
+
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+
+                    console.log(JSON.stringify(jqXHR));
+                    console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                }
+            });
+
+            $('#quoteDiv').load('/quote/ #quoteDiv', function() {
+            /// can add another function here
+            });
+            $(this).prop('disabled', false);
+            $(this).siblings( "input[name*='name']").val("");
+            data.text = $(this).siblings( "input[name*='text']").val("");
+
+      });
+        $('#quoteForm').submit(function(e) {
+            e.preventDefault();
+            $(this).prop('disabled', true);
+            console.log("someone clicked on a buy button!!");
+            e.preventDefault();
+
+            $('#quoteFormStatus').text("Submitting")
+
+            data = {};
+            data.name = $(this).siblings( "input[name*='name']").val();
+            data.text = $(this).siblings( "input[name*='text']").val();
+            data.csrfmiddlewaretoken = $(this).siblings( "input[name*='csrfmiddlewaretoken'] ").val();
+
+            $.ajax({
+                type : 'POST',
+                url  : '/submitQuote/',
+                data: data,
+                success: function(data){
+                    console.log(data);
+
+                    $('#quoteFormStatus').text(data)
+
+
+
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+
+                    console.log(JSON.stringify(jqXHR));
+                    console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                }
+            });
+
+            $('#quoteDiv').load('/quote/ #quoteDiv', function() {
+            /// can add another function here
+            });
+            $(this).prop('disabled', false);
+            $(this).siblings( "input[name*='name']").val("");
+            data.text = $(this).siblings( "input[name*='text']").val("");
+
+      });
+    });
+
+</script>
+
+
+<!--Navigation bar -->
+{% include "strecklista/snippets/navbar.html" %}
+
+<!-- Page Content -->
+<div class="container">
+    <div class="row">
+        <div class="col-md-12"><h1>Citat</h1></div>
+    </div>
+
+    <div class="row">
+        <form target="/submitQuote/" method="post" id="quoteForm">
+            {% csrf_token %}
+            <span class="input-group-addon" id="basic-addon1">Vad sas?</span>
+            {{form.text}}
+            <span class="input-group-addon" id="basic-addon1">Vem sa det?</span>
+            {{form.name}}
+            <br><br>
+            <input type="button" value="Skicka in" class="quoteSubmit">
+
+        </form>
+        <p id="quoteFormStatus">&nbsp</p>
+    </div>
+
+    <h2>Tidigare citat</h2>
+    <div id="quoteDiv">
+        <div class="row">
+            {% if quote_list %}
+                {% for q  in quote_list %}
+                    <div class="row">
+                        <div class="col-md-8">
+                            {{q.text}}
+                        </div>
+                        <div class="col-md-2">
+                            {{q.who}}
+                        </div>
+                        <div class="col-md-2">
+                            {{q.timestamp}}
+                        </div>
+                    </div>
+                    <br>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <!-- /.row -->
+    </div>
+</div>
+</body>
+
+</html>

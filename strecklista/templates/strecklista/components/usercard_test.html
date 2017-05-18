@@ -1,0 +1,17 @@
+{% extends 'strecklista/base.html' %}
+{% block content %}
+<style>
+{%include './usercard.css' %}
+/* Test */
+body {
+  padding: 0;
+  background: #f0f0f0;
+}
+.card {
+  margin-bottom: 30px;
+}
+</style>
+{% for card in cards %}
+  {% include './usercard.html' with user=card.user drinks=card.drinks %}
+{% endfor %}
+{% endblock %}

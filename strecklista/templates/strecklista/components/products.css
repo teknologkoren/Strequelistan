@@ -1,0 +1,19 @@
+.img {
+	width: 5em;
+	height: 5em;
+	margin-right: 1em;
+}
+.name {
+	font-weight: bold;
+}
+.price {
+	text-align: right;
+}
+.price:after {
+	content: ' kr';
+}
+.category {
+	font-size: .8em;
+	font-style: italic;
+	color: grey;
+}
