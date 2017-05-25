@@ -1,19 +1,28 @@
 {% comment %}
 Context:
     user: hash
+      alcohol: float
+      avatar: Image or None
+      display_name: str
+      group: int
       id: int
-      first_name: str
-      last_name: str
-      nickname: str or None
 
     drinks: list of hash
       id: int
       name: str
 {% endcomment %}
+{% load imagekit %}
 <div class="card">
   <div class="name">
-    <a class="profile" href="/profile/{{user.id}}">
-      {{user.display_name}}
+    <a class="profile" href="/profile/{{ user.id }}">
+      {% if user.avatar %}
+        {% thumbnail '128x128' user.avatar anchor='c' -- class="mini-avatar" %}
+      {% else %}
+        <div class="mini-avatar">
+          &#128546;
+        </div>
+      {% endif %}
+      <span>{{ user.display_name }}</span>
     </a>
     <span class="alcometer" data-toggle="tooltip" data-placement="right" title="{{ user.alcohol }}‰">
       {% if user.alcohol == 0 %} {# Don't show anything if at 0 #}

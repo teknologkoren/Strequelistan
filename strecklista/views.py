@@ -41,23 +41,15 @@ def tabbed_index(request):
 
 def get_index_context(request):
     class UserRepresentation:
-        def __init__(self, display_name = "", id = 0, group = None, alcohol = 0):
-            self.display_name = display_name
-            self.id = id
-            self.group = group
-            self.alcohol = alcohol
-        display_name = ""
-        id = 0
-        group = None
+        def __init__(self, user):
+            self.avatar = user.avatar
+            self.display_name = user.display_name()
+            self.id = user.id
+            self.group = user.group
+            self.alcohol = user.blood_alcohol()
 
     u_list = MyUser.objects.order_by('id')
-    user_list = []
-    for user in u_list:
-        u = UserRepresentation(display_name=user.display_name(), id=user.id, group=user.group, alcohol = user.bloodAlcohol())
-
-        user_list.append(u)
-
-    current_user = UserRepresentation(display_name=request.user.display_name(), id=request.user.id, group=request.user.group, alcohol=request.user.bloodAlcohol())
+    user_list = [UserRepresentation(user) for user in u_list]
 
     group_list = Group.objects.order_by('-sortingWeight')
     priceGroup_list = PriceGroup.objects.order_by('sortingWeight')
@@ -74,7 +66,7 @@ def get_index_context(request):
     print(len(transactions))
 
     return {
-        'current_user': current_user,
+        'current_user': UserRepresentation(request.user),
         'user_list': user_list,
         'group_list': group_list,
         'price_group_list': priceGroup_list,

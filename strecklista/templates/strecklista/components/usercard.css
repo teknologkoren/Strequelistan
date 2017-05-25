@@ -1,10 +1,10 @@
 .card {
-	align-items: center;
-	box-shadow: 0 1px 5px 0 rgba(0,0,0,.3);
-	display: flex;
-	flex: 1;
-	margin: 1em .5em;
-	padding: 1em;
+  align-items: center;
+  box-shadow: 0 1px 5px 0 rgba(0,0,0,.3);
+  display: flex;
+  flex: 1;
+  margin: 1em .5em;
+  padding: 1em;
   border-radius: 2px;
   justify-content: space-between;
 }
@@ -21,15 +21,33 @@
   align-items: center;
 }
 
-.profile {
-    margin: 5px;
+.card .name {
+  align-items: flex-start;
+  flex-direction: column;
+  text-align: center;
+}
+
+.mini-avatar {
+  align-items: center;
+  background-color: #ccc;
+  border-radius: 4px;
+  color: #999;
+  display: flex;
+  font-size: 30px;
+  height: 128px;
+  justify-content: center;
+  margin: auto;
+  text-align: center;
+  width: 128px;
 }
 
 .profile,
 .alcometer {
   font-size: 16px;
+  width: 100%;
 }
 
+.alcometer {font-size: 24px;}
 
 .drinks {
   {# List items right to left. #}
