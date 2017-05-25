@@ -4,6 +4,9 @@ django-widget-tweaks==1.4.1
 
 # Image processing
 Pillow==4.0.0
+django-appconf==1.0.2
+django-imagekit==4.0.1
+pilkit==2.0
 
 # Api stuff
 djangorestframework==3.6.2

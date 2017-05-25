@@ -82,6 +82,7 @@ INSTALLED_APPS = filter_non_strings([
     'rest_framework',
     'api',
     'pwa',
+    'imagekit',
     'django_extensions',
 ])
 
@@ -206,8 +207,12 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 50,
     'MAX_PAGE_SIZE' : 200,
-
 }
+
+# Imagekit
+# Use the same directory as other user uploaded files.
+IMAGEKIT_CACHEFILE_DIR = ""
+
 # Progressive Web Application config
 PWA_APP_NAME = 'Streque'
 PWA_APP_THEME_COLOR = '#222'
