@@ -121,7 +121,8 @@ class MyUser(AbstractBaseUser):
         # Simplest possible answer: All admins are staff
         return self.is_admin
 
-    def bloodAlcohol(self):
+    def blood_alcohol(self):
+        """Returns the blood alcohol content in permille."""
         time_threshold = datetime.now() - timedelta(days=7)
         transactions = strecklista.models.Transaction.objects.filter(user = self.id, returned=False, admintransaction=False, timestamp__gte=time_threshold).all().order_by('timestamp')
 

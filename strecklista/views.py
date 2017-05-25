@@ -45,7 +45,7 @@ def get_index_context(request):
             self.display_name = user.display_name()
             self.id = user.id
             self.group = user.group
-            self.alcohol = user.bloodAlcohol()
+            self.alcohol = user.blood_alcohol()
 
     u_list = MyUser.objects.order_by('id')
     user_list = [UserRepresentation(user) for user in u_list]
