@@ -3,6 +3,8 @@ from django.db import models
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
+from imagekit.models import ProcessedImageField
+from imagekit.processors import Transpose
 
 from time import mktime
 
@@ -11,8 +13,6 @@ from datetime import datetime, timedelta
 import strecklista.models
 
 class MyUserManager(BaseUserManager):
-
-
     def create_user(self, email, first_name, last_name, password=None):
         """
         Creates and saves a User with the given email.
@@ -58,7 +58,13 @@ class MyUser(AbstractBaseUser):
     last_name = models.CharField(max_length=50, blank=False)
     nickname = models.CharField(max_length=50,blank=True)
 
-    avatar = models.ImageField(upload_to='protected/avatars/', null=True, blank=True)
+    avatar = ProcessedImageField(
+        upload_to='protected/avatars/',
+        processors=[Transpose()],
+        options={'quality': 60},
+        null=True,
+        blank=True,
+    )
 
     balance = models.DecimalField(decimal_places=2, max_digits=20, default=0)
 
@@ -158,5 +164,3 @@ class MyUser(AbstractBaseUser):
         promille = round((blood_alcohol/(float(self.weight)*body_weight_constant))*1000, 3)
 
         return promille
-
-
