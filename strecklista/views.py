@@ -1,7 +1,7 @@
 import tempfile
 
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseForbidden
+from django.http import HttpResponse, HttpResponseForbidden, HttpResponseBadRequest
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
@@ -317,24 +317,19 @@ def submitQuote(request):
             q.submittedBy = request.user
 
             q.save()
-            return HttpResponse("success")
+            return render(request, 'strecklista/components/quotecard.html', {
+                'quote': q,
+            })
 
-            # else:
-            #    print (form.errors)
-
-    return HttpResponse("Misslyckades av någon anledning. Kan vara en kopia.")
+    return HttpResponseBadRequest("Misslyckades av någon anledning. Kan vara en kopia.")
 
 
 @login_required
 def quote(request):
-    quote_list = Quote.objects.order_by('-id')
-    form = QuoteForm()
-    context = {
-        'form': form,
-        'quote_list': quote_list,
-    }
-
-    return render(request, 'strecklista/quotes.html', context)
+    return render(request, 'strecklista/quotes.html', {
+        'form': QuoteForm(),
+        'quotes': Quote.objects.order_by('-id'),
+    })
 
 
 @login_required

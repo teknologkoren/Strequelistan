@@ -1,148 +1,83 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    {% include "strecklista/snippets/head_content.html" %}
-
-</head>
-
-<body>
-
+{% extends 'strecklista/base.html' %}
+{% block content %}
+<style>
+.card {
+  align-items: center;
+  box-shadow: 0 1px 5px 0 rgba(0,0,0,.3);
+  display: flex;
+  flex: 1;
+  margin: 1em .5em;
+  padding: 1em;
+  border-radius: 2px;
+  justify-content: space-between;
+}
+.card.quote {
+  align-items: inherit;
+  flex-direction: column;
+  font-size: 1.2em;
+}
+.quote-text {
+  font-size: 1.2em;
+}
+.quote-meta {
+  font-style: italic;
+  text-align: right;
+}
+.quotee::before {
+  content: '\2014\00a0';
+}
+.detail {
+  color: #555;
+  font-size: .75em;
+}
+#status:not(.alert-success):not(.alert-danger) {
+  display: none;
+}
+</style>
 <script>
-    $( document ).ready(function() {
-        console.log("loading done")
+$(function() {
+  $('#quoteForm').on('submit', function(e) {
+    e.preventDefault();
+    var $form = $(this);
 
-        $('.quoteSubmit').on('click', function(e) {
-
-            $(this).prop('disabled', true);
-            console.log("someone clicked on a buy button!!");
-            e.preventDefault();
-
-            $('#quoteFormStatus').text("Submitting")
-
-            data = {};
-            data.name = $(this).siblings( "input[name*='name']").val();
-            data.text = $(this).siblings( "input[name*='text']").val();
-            data.csrfmiddlewaretoken = $(this).siblings( "input[name*='csrfmiddlewaretoken'] ").val();
-
-            $.ajax({
-                type : 'POST',
-                url  : '/submitQuote/',
-                data: data,
-                success: function(data){
-                    console.log(data);
-
-                    $('#quoteFormStatus').text(data)
-
-
-
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-
-                    console.log(JSON.stringify(jqXHR));
-                    console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
-                }
-            });
-
-            $('#quoteDiv').load('/quote/ #quoteDiv', function() {
-            /// can add another function here
-            });
-            $(this).prop('disabled', false);
-            $(this).siblings( "input[name*='name']").val("");
-            data.text = $(this).siblings( "input[name*='text']").val("");
-
+    $.post('/submitQuote/', $form.serialize())
+      .then(function (html) {
+        $('#status').text('Citat sparat!')
+          .addClass('alert-success').removeClass('alert-danger');
+        $('#quoteDiv').prepend(html);
+        $form.find('input[type=text]').val('');
+      }, function (xhr) {
+        $('#status').text(xhr.responseText)
+          .removeClass('alert-success').addClass('alert-danger');
       });
-        $('#quoteForm').submit(function(e) {
-            e.preventDefault();
-            $(this).prop('disabled', true);
-            console.log("someone clicked on a buy button!!");
-            e.preventDefault();
-
-            $('#quoteFormStatus').text("Submitting")
-
-            data = {};
-            data.name = $(this).siblings( "input[name*='name']").val();
-            data.text = $(this).siblings( "input[name*='text']").val();
-            data.csrfmiddlewaretoken = $(this).siblings( "input[name*='csrfmiddlewaretoken'] ").val();
-
-            $.ajax({
-                type : 'POST',
-                url  : '/submitQuote/',
-                data: data,
-                success: function(data){
-                    console.log(data);
-
-                    $('#quoteFormStatus').text(data)
-
-
-
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-
-                    console.log(JSON.stringify(jqXHR));
-                    console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
-                }
-            });
-
-            $('#quoteDiv').load('/quote/ #quoteDiv', function() {
-            /// can add another function here
-            });
-            $(this).prop('disabled', false);
-            $(this).siblings( "input[name*='name']").val("");
-            data.text = $(this).siblings( "input[name*='text']").val("");
-
-      });
-    });
-
+  });
+});
 </script>
-
-
-<!--Navigation bar -->
 {% include "strecklista/snippets/navbar.html" %}
-
-<!-- Page Content -->
 <div class="container">
-    <div class="row">
-        <div class="col-md-12"><h1>Citat</h1></div>
-    </div>
+  <h1>Citat</h1>
 
-    <div class="row">
-        <form target="/submitQuote/" method="post" id="quoteForm">
-            {% csrf_token %}
-            <span class="input-group-addon" id="basic-addon1">Vad sas?</span>
-            {{form.text}}
-            <span class="input-group-addon" id="basic-addon1">Vem sa det?</span>
-            {{form.name}}
-            <br><br>
-            <input type="button" value="Skicka in" class="quoteSubmit">
+  <div id="status" class="alert"></div>
 
-        </form>
-        <p id="quoteFormStatus">&nbsp</p>
+  <form target="/submitQuote/" method="post" id="quoteForm" class="clearfix">
+    {% csrf_token %}
+    {% load widget_tweaks %}
+    <div class="form-group">
+      <label>Vad sas?</label>
+      {{ form.text | attr:"class:form-control" }}
     </div>
+    <div class="form-group">
+      <label>Vem sa det?</label>
+      {{ form.name | attr:"class:form-control" }}
+    </div>
+    <input class="btn btn-primary pull-right" type="submit" value="Skicka in">
+  </form>
 
-    <h2>Tidigare citat</h2>
-    <div id="quoteDiv">
-        <div class="row">
-            {% if quote_list %}
-                {% for q  in quote_list %}
-                    <div class="row">
-                        <div class="col-md-8">
-                            {{q.text}}
-                        </div>
-                        <div class="col-md-2">
-                            {{q.who}}
-                        </div>
-                        <div class="col-md-2">
-                            {{q.timestamp}}
-                        </div>
-                    </div>
-                    <br>
-                {% endfor %}
-            {% endif %}
-        </div>
-        <!-- /.row -->
-    </div>
+  <h2>Tidigare citat</h2>
+  <div id="quoteDiv">
+    {% for quote in quotes %}
+      {% include 'strecklista/components/quotecard.html' with quote=quote %}
+    {% endfor %}
+  </div>
 </div>
-</body>
-
-</html>
+{% endblock %}
