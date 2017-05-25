@@ -5,14 +5,15 @@
 <style>
 .avatar {
   align-items: center;
-  background-position: center;
-  background-size: cover;
+  background-color: #ccc;
   color: #999;
   display: flex;
   font-size: 30px;
+  height: 300px;
   justify-content: center;
-  min-height: 300px;
+  object-fit: cover;
   text-align: center;
+  width: 100%;
 }
 </style>
 <div class="container">
@@ -20,11 +21,11 @@
     <div class="col-md-6"><div class="row">
       {% if user.avatar %}
         <a href="{{ user.avatar.url }}">
-          <div class="avatar" style="background-image:url({{user.avatar.url}})"></div>
+          <img class="avatar" src="{{ user.avatar.url }}"/>
         </a>
       {% else %}
-        <div class="avatar" style="background-color:#ccc">
-          &#128546;<br>Ingen bild.
+        <div class="avatar">
+          &#128546;<br>Ingen bild
         </div>
       {% endif %}
       {% if edit_form %}
