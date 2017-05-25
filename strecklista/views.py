@@ -42,6 +42,7 @@ def tabbed_index(request):
 def get_index_context(request):
     class UserRepresentation:
         def __init__(self, user):
+            self.avatar = user.avatar
             self.display_name = user.display_name()
             self.id = user.id
             self.group = user.group
