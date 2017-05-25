@@ -11,32 +11,6 @@
 <script src="{% static 'strecklista/js/jquery.js' %}"></script>
 <script src="{% static 'strecklista/js/bootstrap.min.js' %}"></script>
 {% comment %}
-Custom CSS-changing js:
-* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top.
-  Change if height of navigation changes.
-{% endcomment %}
-<script>
-$(document).ready(function() {
-  var timer;
-  var nav = $("nav");
-
-  var updatePadding = function() {
-    var height = nav.height() + 10;
-    $("body").css("padding-top", height + "px");
-    // Counteract this foolishness.
-    $(".tabs-viewport").css("margin-top", "-" + height + "px");
-  };
-
-  $(window).resize(function() {
-    // wait for window to stop resizing
-    clearTimeout(timer);
-    timer = setTimeout(updatePadding, 25)
-  });
-
-  updatePadding()
-});
-</script>
-{% comment %}
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 {% endcomment %}
