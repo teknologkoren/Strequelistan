@@ -17,6 +17,12 @@ class RegisterRequest(models.Model):
     message = models.TextField(max_length=500, blank=True)
     active = models.BooleanField(default=True)
 
+    def __unicode__(self):
+       return "Register_request: {} {}".format(self.first_name, self.last_name)
+    def __str__(self):
+       return "Register_request: {} {}".format(self.first_name, self.last_name)
+
+
     def registerUser(self):
       user = MyUser()
       user.first_name = self.first_name

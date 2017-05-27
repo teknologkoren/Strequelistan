@@ -505,8 +505,7 @@ def admin_tools(request):
         call_command('email_low_balance')
 
     registerRequests = RegisterRequest.objects.all().filter(active=True)
-    for r in registerRequests:
-        print("%s %s %i" %(r.first_name, r.last_name, r.id))
+
     context['registerRequests'] = registerRequests
 
     return render(request, 'strecklista/admintools.html', context)
