@@ -5,11 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Strequelistan - för torstiga studenter</title>
 {% progressive_web_app_meta %}
+{# Define an alias for $(function ...) so they're run once jQuery exists. #}
+<script>var _$ = [];function $(fn){_$.push(fn)}</script>
 <link rel="icon" type="image/png" href="{% static 'strecklista/images/icon-48.png' %}">
 <link rel="stylesheet" href="{% static 'strecklista/css/bootstrap.min.css' %}">
-{# jquery #}
-<script src="{% static 'strecklista/js/jquery.js' %}"></script>
-<script src="{% static 'strecklista/js/bootstrap.min.js' %}"></script>
+{# Preload jQuery and Bootstrap, but don't execute them yet. Faster load! :D #}
+<link rel="preload" as="script" href="{% static 'strecklista/js/jquery.js' %}">
+<link rel="preload" as="script" href="{% static 'strecklista/js/bootstrap.min.js' %}">
 {% comment %}
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
