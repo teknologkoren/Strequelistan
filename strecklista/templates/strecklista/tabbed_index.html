@@ -164,40 +164,12 @@
 </div>
 <div class="tabs-viewport">
   <div class="tabs-container">
-    {# STREQUE #}
     <div id="streque-tab" class="tab-content">
-      <div id="balanceAlertContainer">
-        {% if user.balance < 100 %}
-          <div class="alert {% if user.balance < 0 %}alert-danger{% else %}alert-warning{% endif %}">
-            Det {% if user.balance < 0 %}finns inga{% else %}är ont om{% endif %} pengar på kontot. Dags att fylla på?
-          </div>
-        {% endif %}
-      </div>
-      {%if quote%}
-      <blockquote>
-        {{quote.text}}
-        <p style="font-style: italic;text-align: right;">&mdash; {{quote.who}}</p>
-      </blockquote>
-      {% endif %}
-      {%include 'strecklista/components/usercard.html' with user=current_user drinks=price_group_list %}
-
-      <h2>Alla</h2>
-      {% if group_list and user_list and price_group_list %}
-        {% for group in group_list %}
-          <h3>{{group.name}}</h3>
-          {% for user in user_list %}
-            {% if group == user.group %}
-              {%include 'strecklista/components/usercard.html' with user=user drinks=price_group_list %}
-            {% endif %}
-          {% endfor %}
-        {% endfor %}
-      {% endif %}
+      {% include 'strecklista/components/streque.html' with user=user groups=groups drinks=price_groups %}
     </div>
-    {# DRINKS #}
     <div id="drinks-tab" class="tab-content">
       {% include 'strecklista/components/products.html' with categories=drink_categories %}
     </div>
-    {# HISTORY #}
     <div id="history-tab" class="tab-content">
       {% include 'strecklista/components/transactions.html' with transactions=transactions %}
     </div>

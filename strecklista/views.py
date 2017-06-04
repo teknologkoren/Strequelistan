@@ -48,11 +48,10 @@ def get_index_context(request):
             self.group = user.group
             self.alcohol = user.blood_alcohol()
 
-    u_list = MyUser.objects.order_by('id')
-    user_list = [UserRepresentation(user) for user in u_list]
+    users = MyUser.objects.order_by('id')
 
     group_list = Group.objects.order_by('-sortingWeight')
-    priceGroup_list = PriceGroup.objects.order_by('sortingWeight')
+    price_groups = PriceGroup.objects.order_by('sortingWeight')
     product_list = Product.objects.filter(is_active = True).order_by('sortingWeight')
     productCategory_list = ProductCategory.objects.order_by('sortingWeight')
     quote = Quote.objects.order_by('?').first()
@@ -63,13 +62,15 @@ def get_index_context(request):
     #transactions = Transaction.objects.filter(admintransaction=False, returned=False).all().order_by(
         "-timestamp")[:10]
 
-    print(len(transactions))
+    groups = [{
+        'name': group.name,
+        'users': [UserRepresentation(user) for user in users if user.group == group],
+        } for group in group_list]
 
     return {
         'current_user': UserRepresentation(request.user),
-        'user_list': user_list,
-        'group_list': group_list,
-        'price_group_list': priceGroup_list,
+        'groups': groups,
+        'price_groups': price_groups,
         'drink_categories':
             [generate_drinks(category, product_list)
                 for category in productCategory_list],
