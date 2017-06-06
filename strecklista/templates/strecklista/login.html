@@ -1,26 +1,41 @@
 {% extends 'strecklista/base.html' %}
+{% load staticfiles %}
+{% load widget_tweaks %}
 {% block content %}
+<style media="screen">
+.logo {
+  display: block;
+  margin: 7% auto;
+  max-width: 250px;
+  width: 35%;
+}
+body {
+  align-items: center;
+  background: hsl(200, 30%, 15%);
+  color: hsl(200, 30%, 90%);
+  display: flex;
+  min-height: 100vh;
+}
+</style>
 <div class="container">
-  <h1>Strecklistan</h1>
-  <h3 class="form-signin-heading">Logga in</h3>
+  <img class="logo" src="{% static 'strecklista/images/icon.svg' %}">
   {% if error_message %}
-    <div class="alert alert-warning">{{error_message}}</div>
+    <div class="alert alert-warning">{{ error_message }}</div>
   {% endif %}
-  <form class="form-signin" action="{{action}}"method="post">
-    {% load widget_tweaks %}
+  <form class="form-signin" method="post" action="{{ action }}">
     {% csrf_token %}
     <div class="form-group">
-      <label for="inputUsername">Email address</label>
-      {{form.username}}
+      <label for="inputUsername">E-mail address</label>
+      {{ form.username | attr:"type:email" | attr:"placeholder:user@example.com" | attr:"autocomplete:email" }}
     </div>
     <div class="form-group">
       <label for="inputPassword">Lösenord</label>
-      {{form.password}}
+      {{ form.password | attr:"placeholder:************" }}
     </div>
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Logga in</button>
   </form>
   <br/>
-  <p>Behöver du ett konto? Skicka en förfrågan här: <a href="/register/">Nytt konto</a></p>
-  <p>Har du glömt ditt lösenord? återställ det här: <a href="/request_reset/">Återställ lösenord</a></p>
+  <p>Har du inget ett konto? <a href="/register/">Begär ett konto</a></p>
+  <p>Har du glömt ditt lösenord? <a href="/request_reset/">Återställ lösenord</a></p>
 </div>
 {% endblock %}
