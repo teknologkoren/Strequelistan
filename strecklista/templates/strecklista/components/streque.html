@@ -17,7 +17,6 @@
 {% for group in groups %}
   <h3>{{group.name}}</h3>
   {% for user in group.users %}
-    {{ user.display_name }}
     {%include 'strecklista/components/usercard.html' with user=user drinks=drinks %}
   {% endfor %}
 {% endfor %}
