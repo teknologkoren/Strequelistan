@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.mail import EmailMessage
 from django.template.loader import get_template
 
-from strecklista.forms import heddaHopperForm
+from strecklista.forms import heddaHopperForm, SuggestionForm
 from .forms import LoginForm, QuoteForm, BulkTransactionForm, ReturnTransactionForm, TransactionDateForm, RegisterRequestForm
 from .models import Transaction, RegisterRequest
 
@@ -570,3 +570,23 @@ def updateAvatar(request):
             print(form.errors)
 
     return HttpResponse("Failed :/")
+
+
+
+@login_required
+def suggestion(request):
+    form = SuggestionForm()
+    context = {
+        'form': form,
+    }
+
+    if request.method == 'POST':
+        form = SuggestionForm(request.POST)
+        if form.is_valid():
+            form.save() #Does this work? #FIXME
+        else:
+            print("failed :(")
+            print (form.errors)
+            context['form'] = form #use the invalid form to get the error messages
+
+    return render(request, 'strecklista/suggestions.html', context)

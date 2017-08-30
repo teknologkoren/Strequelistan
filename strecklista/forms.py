@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from django.forms import DateInput, DateTimeInput, ModelForm
 from datetime import datetime, timedelta
 
-from .models import Quote, RegisterRequest
+from .models import Quote, RegisterRequest, Suggestion
 
 
 class LoginForm(forms.Form):
@@ -149,3 +149,15 @@ class RegisterRequestForm(forms.Form):
             attrs={'class': 'form-control'}
         ),
     )
+
+class SuggestionForm(forms.ModelForm):
+    class Meta:
+        model = Suggestion
+        fields = ['name', 'description', 'price', 'link']
+
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'aria-describedby': 'basic-addon1'}),
+            'description': forms.TextInput(attrs={'class': 'form-control', 'aria-describedby': 'basic-addon1'}),
+            'price': forms.TextInput(attrs={'class': 'form-control', 'aria-describedby': 'basic-addon1'}),
+            'link': forms.TextInput(attrs={'class': 'form-control', 'aria-describedby': 'basic-addon1'}),
+        }

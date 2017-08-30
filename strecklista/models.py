@@ -139,3 +139,21 @@ class Transaction(models.Model):
             self.user.save()
             self.returned = True
             self.save()
+
+
+class Suggestion(models.Model):
+
+    class Meta:
+        ordering = ('-timestamp',)
+
+    timestamp = models.DateTimeField(auto_now_add=True, blank=True)
+    name = models.TextField(blank=False, max_length=250)
+    description = models.TextField(blank=True, max_length=500)
+    price = models.TextField(blank=True, max_length=50)
+    link = models.URLField(blank=True)
+
+    def __str__(self):
+      return 'Suggestion: {}'.format(self.name)
+
+    def __unicode__(self):
+      return 'Suggestion: {}'.format(self.name)
