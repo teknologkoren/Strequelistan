@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% include "strecklista/snippets/head_content.html" %}
+
+</head>
+
+<body>
+
+
+<!--Navigation bar -->
+{% include "strecklista/snippets/navbar.html" %}
+
+<!-- Page Content -->
+<div class="container">
+    <div class="row">
+        <div class="col-md-12"><h1>Förslagslådan</h1></div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <p>
+                Saknar du något i QMs sortiment? Har du hittat en ny spännande öl? Då är det här rätt plats för dig!
+                Fyll i formuläret nedan så kanske det fixas i en sqrubb nära dig.
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+      {% if form.errors %}
+        {% for field in form %}
+          {% for error in field.errors %}
+            <div class="alert alert-danger">
+              <strong>{{ error|escape }}</strong>
+            </div>
+          {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+          <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+    <div class="row">
+        <form action="/suggestions/" method="post" id="quoteForm">
+            {% csrf_token %}
+            <span class="input-group-addon" id="basic-addon1">Namn</span>
+            {{form.name}}
+            <span class="input-group-addon" id="basic-addon1">Beskrivning</span>
+            {{form.description}}
+            <span class="input-group-addon" id="basic-addon1">Pris</span>
+            {{form.price}}
+            <span class="input-group-addon" id="basic-addon1">Länk</span>
+            {{form.link}}
+            <br><br>
+            <input type="submit" value="Skicka in">
+
+        </form>
+
+    </div>
+</div>
+</body>
+
+</html>

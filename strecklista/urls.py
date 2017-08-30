@@ -29,6 +29,8 @@ urlpatterns = [
 
     url(r'^heddaHopper/', views.heddaHopper, name='heddaHopper'),
 
+    url(r'^suggestions/', views.suggestion, name='suggestions'),
+
     url(r'^logout/$', logout, {'next_page': '/'}),
 
     url(r'^product/', views.product, name='product'),
