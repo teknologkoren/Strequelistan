@@ -19,7 +19,7 @@
         var $button = $(this).prop('disabled', true);
 
         $.post(path, $(this.parentElement).serialize())
-          .then(success)
+          .then(success, failure)
           .always(function () {
             $button.prop('disabled', false);
             refreshTransactions();
@@ -28,11 +28,16 @@
       });
     }
 
-    function success() {
-      $body.css('background-color', 'green');
-      setTimeout(function() {
-        $body.css('background-color', 'white');
-      }, 500);
+    var success = flash('green');
+    var failure = flash('red');
+
+    function flash(color) {
+      return function success() {
+        $body.css('background-color', color);
+        setTimeout(function() {
+          $body.css('background-color', 'white');
+        }, 500);
+      };
     }
 
     function refreshAlert() {
