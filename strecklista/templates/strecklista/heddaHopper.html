@@ -1,34 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'strecklista/base.html' %}
 
-<head>
-    {% include "strecklista/snippets/head_content.html" %}
-
-</head>
-
-<body>
-
-
-<!--Navigation bar -->
+{% block content %}
 {% include "strecklista/snippets/navbar.html" %}
-
 <!-- Page Content -->
 <div class="container">
     <div class="row">
         <div class="col-md-12"><h1>Hedda Hopper</h1></div>
     </div>
-    <div class="row">
+
+
+  <div class="row">
         <div class="col-md-12">
             <p>
-                Har du något kärlektstips som du vill skicka in till Hedda Hopper? I så fall är du på helt rätt plats!</br>
+                Har du något kärlektstips som du vill skicka in till Hedda Hopper? I så fall är du på helt rätt plats!<br/>
                 Här kan du anonymt skicka in tipsen
             </p>
         </div>
     </div>
 
-
     <div class="row">
-        <form action="/heddaHopper/" method="post" id="quoteForm">
+        <form action="/heddaHopper/" method="post" id="form">
             {% csrf_token %}
             <span class="input-group-addon" id="basic-addon1">När?</span>
             {{form.when}}
@@ -38,11 +29,7 @@
             {{form.what}}
             <br><br>
             <input type="submit" value="Skicka in">
-
         </form>
-
     </div>
 </div>
-</body>
-
-</html>
+{% endblock %}
