@@ -139,6 +139,12 @@ class QuoteSerializer(serializers.ModelSerializer):
         )
 
 
+class RandomQuoteViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAdminOrReadOnly,)
+    queryset = Quote.objects.all().order_by('?')[:1]
+    serializer_class = QuoteSerializer
+
+
 class QuoteViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAdminOrReadOnly,)
     queryset = Quote.objects.all()
