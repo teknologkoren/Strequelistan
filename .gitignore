@@ -72,3 +72,6 @@ quotes.txt
 userlist.txt
 
 alge/config.py
+
+# Bazel
+/bazel-*
