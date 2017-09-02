@@ -1,17 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'strecklista/base.html' %}
 
-<head>
-    {% include "strecklista/snippets/head_content.html" %}
-
-</head>
-
-<body>
-
-
-<!--Navigation bar -->
+{% block content %}
 {% include "strecklista/snippets/navbar.html" %}
-
 <!-- Page Content -->
 <div class="container">
     <div class="row">
@@ -25,7 +15,6 @@
             </p>
         </div>
     </div>
-
     <div class="row">
       {% if form.errors %}
         {% for field in form %}
@@ -43,7 +32,7 @@
       {% endif %}
     </div>
     <div class="row">
-        <form action="/suggestions/" method="post" id="quoteForm">
+        <form action="/suggestions/" method="post" id="form">
             {% csrf_token %}
             <span class="input-group-addon" id="basic-addon1">Namn</span>
             {{form.name}}
@@ -60,6 +49,4 @@
 
     </div>
 </div>
-</body>
-
-</html>
+{% endblock %}

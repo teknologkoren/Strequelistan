@@ -86,15 +86,12 @@ class TransactionDateForm(forms.Form):
         }
 
 class heddaHopperForm(forms.Form):
-
-
     where = forms.CharField(
         max_length=255,
         widget=forms.TextInput(
             attrs={'class': 'form-control', 'aria-describedby': 'basic-addon1'}
         ),
         required=False,
-
     )
 
     when = forms.CharField(
@@ -103,16 +100,14 @@ class heddaHopperForm(forms.Form):
             attrs={'class': 'form-control', 'aria-describedby': 'basic-addon1'},
         ),
         required=False,
-
     )
 
     what = forms.CharField(
         max_length=4000,
-        widget=forms.Textarea(
+        widget=forms.TextInput(
             attrs={'class': 'form-control', 'aria-describedby': 'basic-addon1'}
         ),
         required=True,
-
     )
 
 class RegisterRequestForm(forms.Form):
