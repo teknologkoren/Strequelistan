@@ -1,4 +1,5 @@
 {% extends 'strecklista/base.html' %}
+{% load staticfiles %}
 {% block content %}
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <style>
@@ -28,7 +29,7 @@
       });
     }
 
-    var success = flash('green');
+    var success = showImageBubble("{% static 'strecklista/images/emma.gif' %}", flash('green'));
     var failure = flash('red');
 
     function flash(color) {
@@ -38,6 +39,31 @@
           $body.css('background-color', 'white');
         }, 500);
       };
+    }
+
+    function showImageBubble(url, fallback) {
+      return function() {
+        var minDim = Math.min(window.innerWidth, window.innerHeight) * .7;
+        var $img = $('<img>').attr('src', url)
+            .on('error', fallback).on('load', show)
+            .addClass('img-bubble initial').appendTo($body)
+            .css({
+              width: minDim,
+              margin: -minDim / 2,
+            });
+
+        function show() {
+          setTimeout(function() {
+            $img.removeClass('initial');
+            setTimeout(function () {
+              $img.addClass('initial');
+              setTimeout(function () {
+                $img.remove();
+              }, 200);
+            }, 1000)
+          }, 30);
+        }
+      }
     }
 
     function refreshAlert() {
@@ -80,6 +106,19 @@
 .ink.initial {
   transform: scale(.001);
   opacity: .2;
+}
+
+.img-bubble {
+  border-radius: 50%;
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: scale(1);
+  transition: transform .1s;
+}
+
+.img-bubble.initial {
+  transform: scale(.001);
 }
 
 .tabs > .tab-option {
