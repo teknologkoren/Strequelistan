@@ -2,7 +2,7 @@ from django.http import Http404
 from django.shortcuts import render
 from rest_framework import routers, serializers, viewsets
 from EmailUser.models import MyUser
-from strecklista.models import Group, Transaction, PriceGroup, Product, ProductCategory, PriceLimit
+from strecklista.models import Group, Transaction, PriceGroup, Product, ProductCategory, PriceLimit, Quote
 from django.contrib.auth.decorators import login_required
 from rest_framework import authentication, permissions
 from django.shortcuts import get_object_or_404
@@ -126,6 +126,29 @@ class PriceLimitViewSet(viewsets.ModelViewSet):
   permission_classes = (IsAdminOrReadOnly,)
   queryset = PriceLimit.objects.all()
   serializer_class = PriceLimitSerializer
+
+
+class QuoteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Quote
+        fields = (
+            'text',
+            'who',
+            'timestamp',
+            'submittedBy',
+        )
+
+
+class RandomQuoteViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAdminOrReadOnly,)
+    queryset = Quote.objects.all().order_by('?')[:1]
+    serializer_class = QuoteSerializer
+
+
+class QuoteViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAdminOrReadOnly,)
+    queryset = Quote.objects.all()
+    serializer_class = QuoteSerializer
 
 
 class TransactionSerializer(serializers.Serializer):

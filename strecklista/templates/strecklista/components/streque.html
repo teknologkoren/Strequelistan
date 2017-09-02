@@ -1,3 +1,4 @@
+{% load staticfiles %}
 <div id="balanceAlertContainer">
   {% if user.balance < 100 %}
     <div class="alert {% if user.balance < 0 %}alert-danger{% else %}alert-warning{% endif %}">
@@ -5,11 +6,36 @@
     </div>
   {% endif %}
 </div>
-{%if quote%}
-<blockquote>
-  {{quote.text}}
-  <p style="font-style: italic;text-align: right;">&mdash; {{quote.who}}</p>
-</blockquote>
+
+{%if quote %}
+  <div id="quote" style="display:flex;align-items:center;margin-bottom:20px">
+    <blockquote style="flex:1;margin:0">
+      <span>{{quote.text}}</span>
+      <p style="font-style: italic;text-align: right;">&mdash; {{quote.who}}</p>
+    </blockquote>
+    <button class="material-icon-button" onclick="getNewQuote()">
+      <i class="material-icons">refresh</i>
+    </button>
+  </div>
+  <style>
+    .material-icon-button {
+      background: #f0f0f0; 
+      border: 0;
+      height: 36px;
+      padding: 0;
+      width: 36px;
+    }
+  </style>
+  <script>
+    function getNewQuote() {
+      $.getJSON('/api/randomQuote').then(function (response) {
+        var quote = response.results[0];
+        var block = document.querySelector('#quote blockquote');
+        block.querySelector('span').innerText = quote.text;
+        block.querySelector('p').innerText = '\u2014 ' + quote.who;
+      });
+    }
+  </script>
 {% endif %}
 {%include 'strecklista/components/usercard.html' with user=current_user drinks=drinks %}
 
