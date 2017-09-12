@@ -107,14 +107,18 @@
             <div><p>{{user.balance}} kr</p></div>
           </div>
         {% endif %}
-           {% if imageForm %}
-              <form action="/updateProfileImage/" method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                {{ imageForm.avatar }}
-                  <input type="hidden" name="id" value="{{ user.id }}">
-                <input type="submit" value="uppdatera bild">
-              </form>
-           {% endif %}
+        {% if imageForm %}
+          <form class="form-group clearfix" action="/updateProfileImage/" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+              <label>Profilbild</label>
+              {% load widget_tweaks %}
+              {{imageForm.avatar | attr:"class:form-control"}}
+            </div>
+            <input type="hidden" name="id" value="{{ user.id }}">
+            <input class="btn btn-primary pull-right" type="submit" value="Uppdatera bild">
+          </form>
+        {% endif %}
         {% if can_edit %}
           <div class="form-group">
             <a class="btn btn-primary pull-right" href="/profile/{{user.id}}?edit=true">Redigera</a>
