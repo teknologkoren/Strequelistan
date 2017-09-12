@@ -44,7 +44,7 @@ def filter_non_strings(items):
     return list(filter(lambda item: type(item) is str, items))
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.getcwd()
 
 
 # Quick-start development settings - unsuitable for production

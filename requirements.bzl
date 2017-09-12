@@ -11,7 +11,6 @@ requirements = [
 
     # Api stuff
     "djangorestframework==3.6.2",
-    "django-cors-headers==2.1.0", # Using multiple servers in parallel.
     "markdown==2.6.8",
     "django-filter==1.0.2",
 
