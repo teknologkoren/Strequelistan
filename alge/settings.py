@@ -10,51 +10,49 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
-import json
+from configparser import ConfigParser
 import os
 import random
 import string
 
 
-# Load JSON config if available. Otherwise, if config.py exists, convert it
-# to JSON. Otherwise, just create a new one.
-filename = "streque.json"
+# Load INI config if available. Otherwise, if config.py exists, convert it
+# to INI. Otherwise, just create a new one.
+config = ConfigParser()
+filename = "streque.ini"
 had_config = False
 try:
-    f = open(filename, "r")
-    config = json.load(f)
-    had_config = True
+    with open(filename) as file:
+        config.read_file(file)
+        had_config = True
 except:
     try:
         import alge.config as c
-        config = {
-            "debug": c.DEBUG,
-            "secret_key": c.SECRET_KEY,
-            "email": {
-                "use_tls": c.EMAIL_USE_TLS,
-                "host": c.EMAIL_HOST,
-                "user": c.EMAIL_HOST_USER,
-                "password": c.EMAIL_HOST_PASSWORD,
-                "port": c.EMAIL_PORT,
+        config.read_dict({
+            "main": {
+                "debug": "yes" if c.DEBUG else "no",
+                "secret_key": c.SECRET_KEY,
             },
-        }
-    except ImportError as e:
+            "email": {
+                "use_tls": "yes" if c.EMAIL_USE_TLS else "no",
+                "host": c.EMAIL_HOST or "",
+                "user": c.EMAIL_HOST_USER or "",
+                "password": c.EMAIL_HOST_PASSWORD or "",
+                "port": str(c.EMAIL_PORT),
+            },
+        })
+    except ImportError:
+        # Generate a new config file
         char = lambda: random.choice(string.ascii_letters + string.digits)
-        config = {
-            "debug": False,
-            "secret_key": ''.join(char() for _ in range(50)),
-            "email": {
-                "use_tls": True,
-                "host": None,
-                "user": None,
-                "password": None,
-                "port": 587,
+        config.read_dict({
+            "main": {
+                "secret_key": ''.join(char() for _ in range(50)),
             },
-        }
+        })
 
 if not had_config:
-    with open(filename, "w") as f:
-        json.dump(config, f, indent=2, sort_keys=True)
+    with open(filename, "w") as file:
+        config.write(file)
 
 
 def filter_non_strings(items):
@@ -69,13 +67,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config["secret_key"]
+SECRET_KEY = config.get("main", "secret_key")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-if 'DEBUG' in dir(config):
-    DEBUG = config["debug"]
-else:
-    DEBUG = True
+DEBUG = config.getboolean("main", "debug", fallback=False)
+if DEBUG:
+    print("NOTE: Running in DEBUG mode")
 
 ALLOWED_HOSTS = ["localhost", "streque.se", "www.streque.se"]
 
@@ -190,12 +187,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = '/media/'
 
 # E-mail SMTP settings
-email_config = config["email"]
-EMAIL_USE_TLS = email_config["use_tls"]
-EMAIL_HOST = email_config["host"]
-EMAIL_HOST_USER = email_config["user"]
-EMAIL_HOST_PASSWORD = email_config["password"]
-EMAIL_PORT = email_config["port"]
+EMAIL_USE_TLS = config.getboolean("email", "use_tls", fallback=True)
+EMAIL_HOST = config.get("email", "host", fallback=None)
+EMAIL_HOST_USER = config.get("email", "user", fallback=None)
+EMAIL_HOST_PASSWORD = config.get("email", "password", fallback=None)
+EMAIL_PORT = config.getint("email", "port", fallback=587)
 
 # url to login page
 LOGIN_URL = '/login'
