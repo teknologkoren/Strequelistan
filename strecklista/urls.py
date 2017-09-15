@@ -44,11 +44,10 @@ urlpatterns = [
 
     url(r'^admintools/', views.admin_tools, name='adminTools'),
 
-    url(r'^pdf/', views.lista_as_pdf, name='paperlist'),
+    # A printable version of the strecklista.
+    url(r'^paperlist/', include('strecklista.paperlist')),
 
     url(r'^updateProfileImage/', views.updateAvatar, name='updateAvatar'),
-
-
 ]
 
 # If we're debugging, add patterns for all component demos.
