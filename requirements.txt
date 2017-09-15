@@ -2,6 +2,9 @@ django>=1.9
 django-livereload-server==0.2.3
 django-widget-tweaks==1.4.1
 
+# Config
+toml==0.9.2
+
 # Image processing
 Pillow==4.0.0
 django-appconf==1.0.2

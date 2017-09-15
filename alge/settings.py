@@ -10,20 +10,20 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
-import json
 import os
 import random
 import string
+import toml
 
 
-# Load JSON config if available. Otherwise, if config.py exists, convert it
-# to JSON. Otherwise, just create a new one.
-filename = "streque.json"
+# Load TOML config if available. Otherwise, if config.py exists, convert it
+# to TOML. Otherwise, just create a new one.
+filename = "streque.toml"
 had_config = False
 try:
-    f = open(filename, "r")
-    config = json.load(f)
-    had_config = True
+    with open(filename, "r") as f:
+        config = toml.load(f)
+        had_config = True
 except:
     try:
         import alge.config as c
@@ -41,7 +41,6 @@ except:
     except ImportError as e:
         char = lambda: random.choice(string.ascii_letters + string.digits)
         config = {
-            "debug": False,
             "secret_key": ''.join(char() for _ in range(50)),
             "email": {
                 "use_tls": True,
@@ -54,7 +53,7 @@ except:
 
 if not had_config:
     with open(filename, "w") as f:
-        json.dump(config, f, indent=2, sort_keys=True)
+        toml.dump(config, f)
 
 
 def filter_non_strings(items):
@@ -72,10 +71,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = config["secret_key"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-if 'DEBUG' in dir(config):
-    DEBUG = config["debug"]
-else:
-    DEBUG = True
+DEBUG = config.get("debug", False)
+if DEBUG:
+    print("NOTE: running in DEBUG mode")
 
 ALLOWED_HOSTS = ["localhost", "streque.se", "www.streque.se"]
 
@@ -190,12 +188,13 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = '/media/'
 
 # E-mail SMTP settings
-email_config = config["email"]
-EMAIL_USE_TLS = email_config["use_tls"]
-EMAIL_HOST = email_config["host"]
-EMAIL_HOST_USER = email_config["user"]
-EMAIL_HOST_PASSWORD = email_config["password"]
-EMAIL_PORT = email_config["port"]
+# Use `dict.get()` so as not crash the app on missing keys.
+email_config = config.get("email", {})
+EMAIL_USE_TLS = email_config.get("use_tls", True)
+EMAIL_HOST = email_config.get("host")
+EMAIL_HOST_USER = email_config.get("user")
+EMAIL_HOST_PASSWORD = email_config.get("password")
+EMAIL_PORT = email_config.get("port")
 
 # url to login page
 LOGIN_URL = '/login'

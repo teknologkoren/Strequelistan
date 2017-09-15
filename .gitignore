@@ -67,5 +67,4 @@ target/
 # Application generated files
 media/
 db.sqlite3
-streque.json
-alge/config.py
+streque.toml
