@@ -44,7 +44,7 @@ urlpatterns = [
 
     url(r'^admintools/', views.admin_tools, name='adminTools'),
 
-    url(r'^pdf/', views.lista_as_pdf, name='PDFLista'),
+    url(r'^pdf/', views.lista_as_pdf, name='paperlist'),
 
     url(r'^updateProfileImage/', views.updateAvatar, name='updateAvatar'),
 
