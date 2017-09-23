@@ -152,8 +152,18 @@ class Suggestion(models.Model):
     price = models.TextField(blank=True, max_length=50)
     link = models.URLField(blank=True)
 
+
     def __str__(self):
       return 'Suggestion: {}'.format(self.name)
 
     def __unicode__(self):
       return 'Suggestion: {}'.format(self.name)
+
+class SuggestionVote(models.Model):
+    class Meta:
+        ordering = ('-timestamp',)
+
+    timestamp = models.DateTimeField(auto_now_add=True, blank=True)
+    Suggestion = models.ForeignKey(Suggestion, on_delete=models.CASCADE)
+    user = models.ForeignKey(MyUser, on_delete=models.CASCADE)
+    approve = models.BooleanField()

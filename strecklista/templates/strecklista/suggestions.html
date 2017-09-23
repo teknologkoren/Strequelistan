@@ -18,7 +18,7 @@
     <div class="row">
       {% if form.errors %}
         {% for field in form %}
-          {% for error in field.errors %}
+          {% for error in field.errors %}z
             <div class="alert alert-danger">
               <strong>{{ error|escape }}</strong>
             </div>
@@ -47,6 +47,15 @@
 
         </form>
 
+    </div>
+    <div class="row">
+        <h2>Inskickade förslag</h2>
+      <div id="suggestionDiv">
+        {% for suggestion in suggestions %}
+            heja+
+          {% include 'strecklista/components/suggestioncard.html' with suggestion=suggestion %}
+        {% endfor %}
+      </div>
     </div>
 </div>
 {% endblock %}

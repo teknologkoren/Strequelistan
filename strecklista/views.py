@@ -11,10 +11,10 @@ from django.core.mail import EmailMessage
 from django.template.loader import get_template
 
 from strecklista.forms import heddaHopperForm, SuggestionForm
-from .forms import LoginForm, QuoteForm, BulkTransactionForm, ReturnTransactionForm, TransactionDateForm, RegisterRequestForm
+from .forms import LoginForm, QuoteForm, BulkTransactionForm, ReturnTransactionForm, TransactionDateForm, RegisterRequestForm, SuggestionVoteForm
 from .models import Transaction, RegisterRequest
 
-from strecklista.models import Group, PriceGroup, Product, ProductCategory, Quote
+from strecklista.models import Group, PriceGroup, Product, ProductCategory, Quote, Suggestion, SuggestionVote
 from django.forms import formset_factory
 from EmailUser.models import MyUser
 from EmailUser.forms import UpdateUserForm, UpdateUserImageForm
@@ -578,7 +578,10 @@ def suggestion(request):
     form = SuggestionForm()
     context = {
         'form': form,
+        'suggestions':Suggestion.objects.all()
     }
+
+    print(context["suggestions"])
 
     if request.method == 'POST':
         form = SuggestionForm(request.POST)
@@ -590,3 +593,21 @@ def suggestion(request):
             context['form'] = form #use the invalid form to get the error messages
 
     return render(request, 'strecklista/suggestions.html', context)
+
+
+@login_required
+def suggestionVote(request):
+
+    if request.method == 'GET':
+        form = SuggestionVoteForm(request.GET)
+        if form.is_valid():
+            #TODO remove old votes from same user
+            v = SuggestionVote()
+            v.suggestion = request.GET["suggestion"]
+            v.user = request.user
+            if request.GET["approve"] == True:
+                v.approve = True
+            elif request.GET["approve"] == False:
+                v.approve = True
+
+            v.save()

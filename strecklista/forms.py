@@ -156,3 +156,7 @@ class SuggestionForm(forms.ModelForm):
             'price': forms.TextInput(attrs={'class': 'form-control', 'aria-describedby': 'basic-addon1'}),
             'link': forms.TextInput(attrs={'class': 'form-control', 'aria-describedby': 'basic-addon1'}),
         }
+s
+class SuggestionVoteForm(forms.Form):
+    user = forms.IntegerField(required=True)
+    vote = forms.BooleanField(required=True)
