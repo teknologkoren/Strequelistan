@@ -6,6 +6,11 @@
     <div class="suggestion-link">{{ suggestion.link }}</div>
   </div>
   <div class="suggestion-vote">
+    <form>
+      {% csrf_token %}
+      <input type="hidden" name="" value="">
+    </form>
+
     <a href="#">Vote up</a>
     <a href="#">Vote down</a>
   </div>

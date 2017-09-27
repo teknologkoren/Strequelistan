@@ -576,8 +576,10 @@ def updateAvatar(request):
 @login_required
 def suggestion(request):
     form = SuggestionForm()
+    voteform = SuggestionVoteForm()
     context = {
         'form': form,
+        'voteform': voteform,
         'suggestions':Suggestion.objects.all()
     }
 
@@ -598,16 +600,17 @@ def suggestion(request):
 @login_required
 def suggestionVote(request):
 
-    if request.method == 'GET':
-        form = SuggestionVoteForm(request.GET)
+    if request.method == 'POST':
+        print("Suggestion vote recieved")
+        form = SuggestionVoteForm(request.POST)
         if form.is_valid():
             #TODO remove old votes from same user
             v = SuggestionVote()
-            v.suggestion = request.GET["suggestion"]
+            v.suggestion = request.POST["suggestion"]
             v.user = request.user
-            if request.GET["approve"] == True:
+            if request.POST["approve"] == "True":
                 v.approve = True
-            elif request.GET["approve"] == False:
-                v.approve = True
+            elif request.POST["approve"] == "False":
+                v.approve = False
 
             v.save()

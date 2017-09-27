@@ -52,8 +52,8 @@
         <h2>Inskickade förslag</h2>
       <div id="suggestionDiv">
         {% for suggestion in suggestions %}
-            heja+
-          {% include 'strecklista/components/suggestioncard.html' with suggestion=suggestion %}
+          {% include 'strecklista/components/suggestioncard.html' with suggestion=suggestion voteform=voteform%}
+
         {% endfor %}
       </div>
     </div>
