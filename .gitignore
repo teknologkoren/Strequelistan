@@ -63,12 +63,8 @@ target/
 #Ipython Notebook
 .ipynb_checkpoints
 .idea/
-db.sqlite3
 
+# Application generated files
 media/
-
-quotes.txt
-
-userlist.txt
-
-alge/config.py
+db.sqlite3
+streque.toml
