@@ -8,7 +8,6 @@ from django.contrib.auth import login as auth_login
 from datetime import datetime, timedelta
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.mail import EmailMessage
-from django.template.loader import get_template
 
 from strecklista.forms import heddaHopperForm, SuggestionForm
 from .forms import LoginForm, QuoteForm, BulkTransactionForm, ReturnTransactionForm, TransactionDateForm, RegisterRequestForm
@@ -25,9 +24,6 @@ from password_reset_email.models import PasswordResetEmail
 
 from django.core.management import call_command
 
-from subprocess import Popen, PIPE
-
-import os
 
 @login_required
 def index(request):
@@ -451,48 +447,6 @@ def heddaHopper(request):
             print (form.errors)
 
     return render(request, 'strecklista/heddaHopper.html', context)
-
-
-@login_required
-def lista_as_pdf(request):
-    if request.GET.get("active", False):
-        userlist = MyUser.objects.filter(active_singer=True).all().order_by('first_name')
-    else:
-        userlist = MyUser.objects.all().order_by('first_name')
-
-    grouplist = []
-
-    # Filter to only get used groups
-    for user in userlist:
-        if user.group is not None and user.group not in grouplist:
-            grouplist.append(user.group)
-
-    grouplist.sort(key=lambda x: x.sortingWeight, reverse=True)
-
-    context = {
-        'user_list' : userlist,
-        'group_list' : grouplist,
-    }
-    template = get_template('strecklista/lista_latex_template.tex')
-    rendered_tpl = template.render(context).encode('utf-8')
-    # Python3 only. For python2 check out the docs!
-    with tempfile.TemporaryDirectory() as tempdir:
-        # Create subprocess, supress output with PIPE and
-        # run latex twice to generate the TOC properly.
-        # Finally read the generated pdf.
-        for i in range(2):
-            process = Popen(
-                ['pdflatex', '-output-directory', tempdir],
-                stdin=PIPE,
-                stdout=PIPE,
-            )
-            process.communicate(rendered_tpl)
-        with open(os.path.join(tempdir, 'texput.pdf'), 'rb') as f:
-            pdf = f.read()
-    r = HttpResponse(content_type='application/pdf')
-    # r['Content-Disposition'] = 'attachment; filename=texput.pdf'
-    r.write(pdf)
-    return r
 
 
 @user_passes_test(lambda u: u.is_admin)
