@@ -86,13 +86,12 @@ INSTALLED_APPS = filter_non_strings([
     'django_extensions',
 ])
 
-MIDDLEWARE_CLASSES = filter_non_strings([
+MIDDLEWARE = filter_non_strings([
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     DEBUG and 'livereload.middleware.LiveReloadScript',
