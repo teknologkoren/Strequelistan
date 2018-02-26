@@ -23,3 +23,6 @@ django-progressive-web-app = "*"
 
 
 [dev-packages]
+
+[requires]
+python_version = "3"
