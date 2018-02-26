@@ -12,7 +12,7 @@ Context:
       name: str
 {% endcomment %}
 {% load imagekit %}
-<div class="card">
+<div class="card user-card {% if user == current_user %}current-user{% endif %}">
   <div class="name">
     <a class="profile" href="/profile/{{ user.id }}">
       {% if user.avatar %}
@@ -22,7 +22,7 @@ Context:
           &#128546;
         </div>
       {% endif %}
-      <span>{{ user.display_name }}</span>
+      <span data-firstname="{{ user.first_name }}" data-lastname="{{ user.last_name}}" class="display-name">{{ user.display_name }}</span>
     </a>
     <span class="alcometer" data-toggle="tooltip" data-placement="right" title="{{ user.alcohol }}‰">
       {% if user.alcohol == 0 %} {# Don't show anything if at 0 #}

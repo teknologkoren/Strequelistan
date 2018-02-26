@@ -37,7 +37,48 @@
     }
   </script>
 {% endif %}
+
 {%include 'strecklista/components/usercard.html' with user=current_user drinks=drinks %}
+
+<h2>Filter users</h2>
+<input type="text" id="user-filter" placeholder="Name" autocomplete="off" style="margin-bottom:10px;margin-right:10px;">
+<input id="clear-filter" type="button" value="Clear" style="background:#f0f0f0;border:0;min-height:40px;min-width:40px;">
+
+<script>
+function doFilter() {
+  var re = new RegExp(this.value, "i");
+  var cards = document.querySelectorAll(".user-card:not(.current-user)");
+
+  for (var i = 0; i < cards.length; i++) {
+    var nameEl = cards[i].querySelector(".display-name");
+
+    if (re.test(nameEl.innerHTML)
+      || re.test(nameEl.dataset.firstname)
+      || re.test(nameEl.dataset.lastname)) {
+      cards[i].style.display = "";
+    } else {
+      cards[i].style.display = "none";
+    }
+  }
+}
+
+function userFilter() {
+  var filter = document.getElementById("user-filter");
+  filter.addEventListener("input", doFilter)
+}
+
+function clearFilter() {
+  var filter = document.getElementById("user-filter");
+  var clear = document.getElementById("clear-filter");
+  clear.addEventListener("click", function () {
+    filter.value = "";
+    doFilter();
+  })
+}
+
+userFilter();
+clearFilter();
+</script>
 
 <h2>Alla</h2>
 {% for group in groups %}
