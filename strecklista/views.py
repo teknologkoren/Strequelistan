@@ -40,6 +40,8 @@ def get_index_context(request):
         def __init__(self, user):
             self.avatar = user.avatar
             self.display_name = user.display_name()
+            self.first_name = user.first_name
+            self.last_name = user.last_name
             self.id = user.id
             self.group = user.group
             self.alcohol = user.blood_alcohol()

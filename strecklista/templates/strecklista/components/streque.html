@@ -37,7 +37,50 @@
     }
   </script>
 {% endif %}
+
 {%include 'strecklista/components/usercard.html' with user=current_user drinks=drinks %}
+
+<h2>Filtrera användare</h2>
+<div style="display:flex;margin-bottom:20px;">
+  <input type="text" id="user-filter" placeholder="Namn" autocomplete="off" style="flex:1;min-width:0;max-width:350px;margin-right:10px;">
+  <input id="clear-filter" type="button" value="Rensa" style="background:#f0f0f0;border:0;min-height:40px;min-width:40px;">
+</div>
+
+<script>
+function doFilter() {
+  var re = new RegExp(this.value, "i");
+  var cards = document.querySelectorAll(".user-card:not(.current-user)");
+
+  for (var i = 0; i < cards.length; i++) {
+    var nameEl = cards[i].querySelector(".display-name");
+
+    if (re.test(nameEl.innerHTML)
+      || re.test(nameEl.dataset.firstname)
+      || re.test(nameEl.dataset.lastname)) {
+      cards[i].style.display = "";
+    } else {
+      cards[i].style.display = "none";
+    }
+  }
+}
+
+function userFilter() {
+  var filter = document.getElementById("user-filter");
+  filter.addEventListener("input", doFilter)
+}
+
+function clearFilter() {
+  var filter = document.getElementById("user-filter");
+  var clear = document.getElementById("clear-filter");
+  clear.addEventListener("click", function () {
+    filter.value = "";
+    doFilter();
+  })
+}
+
+userFilter();
+clearFilter();
+</script>
 
 <h2>Alla</h2>
 {% for group in groups %}
