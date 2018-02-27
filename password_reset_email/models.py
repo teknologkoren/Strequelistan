@@ -7,7 +7,7 @@ from django.core.mail import send_mail
 
 class PasswordResetEmail(models.Model):
 
-    user = models.ForeignKey(MyUser)
+    user = models.ForeignKey(MyUser, on_delete=models.CASCADE)
     key = models.CharField(max_length=100)
     timestamp = models.DateTimeField(auto_now_add=True)
     used = models.BooleanField(default=False)

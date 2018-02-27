@@ -16,7 +16,7 @@ Context:
   <div class="name">
     <a class="profile" href="/profile/{{ user.id }}">
       {% if user.avatar %}
-        {% thumbnail '128x128' user.avatar anchor='c' -- class="mini-avatar" %}
+        {% thumbnail '128x128' user.avatar -- class="mini-avatar" %}
       {% else %}
         <div class="mini-avatar">
           &#128546;

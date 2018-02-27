@@ -72,7 +72,7 @@ class MyUser(AbstractBaseUser):
 
     phone_number = models.CharField(validators=[phone_regex],null=True, blank=True, max_length=20) # validators should be a list
 
-    group = models.ForeignKey('strecklista.Group', null=True)
+    group = models.ForeignKey('strecklista.Group', on_delete=models.SET_NULL, null=True)
 
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)

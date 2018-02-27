@@ -1,0 +1,28 @@
+[[source]]
+
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+
+[packages]
+
+Django = "*"
+django-livereload-server = "*"
+django-widget-tweaks = "*"
+Pillow = "*"
+django-appconf = "*"
+django-imagekit = "*"
+pilkit = "*"
+djangorestframework = "*"
+Markdown = "*"
+django-filter = "*"
+yapf = "*"
+django-extensions = "*"
+django-progressive-web-app = "*"
+
+
+[dev-packages]
+
+[requires]
+python_version = "3"
