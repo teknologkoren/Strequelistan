@@ -13,7 +13,7 @@ class IsAdminOrReadOnly(permissions.BasePermission):
 
   def has_permission(self, request, view):
     # Can view
-    if request.user.is_authenticated() and request.method in permissions.SAFE_METHODS:
+    if request.user.is_authenticated and request.method in permissions.SAFE_METHODS:
       return True
 
     # Can edit
@@ -25,7 +25,7 @@ class IsAdminOrReadOnly(permissions.BasePermission):
   def has_object_permission(self, request, view, obj):
 
     #Can view
-    if request.user.is_authenticated() and request.method in permissions.SAFE_METHODS:
+    if request.user.is_authenticated and request.method in permissions.SAFE_METHODS:
 
       return True
 
