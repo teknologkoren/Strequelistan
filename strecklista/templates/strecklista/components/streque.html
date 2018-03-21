@@ -64,9 +64,38 @@ function doFilter() {
   }
 }
 
+function doInefficientFilter() {
+  var re = new RegExp(this.value, "i");
+  var groups = document.getElementsByClassName("group");
+
+  for (var i = 0; i < groups.length; i++) {
+    var cards = groups[i].getElementsByClassName("user-card");
+    var matches = [];
+
+    for (var j = 0; j < cards.length; j++) {
+      var nameEl = cards[j].querySelector(".display-name");
+
+      if (re.test(nameEl.innerHTML)
+        || re.test(nameEl.dataset.firstname)
+        || re.test(nameEl.dataset.lastname)) {
+        cards[j].style.display = "";
+        matches.push(cards[j]);
+      } else {
+        cards[j].style.display = "none";
+      }
+    }
+
+    if (matches.length > 0) {
+      groups[i].style.display = "";
+    } else {
+      groups[i].style.display = "none";
+    }
+  }
+}
+
 function userFilter() {
   var filter = document.getElementById("user-filter");
-  filter.addEventListener("input", doFilter)
+  filter.addEventListener("input", doInefficientFilter)
 }
 
 function clearFilter() {
@@ -84,8 +113,10 @@ clearFilter();
 
 <h2>Alla</h2>
 {% for group in groups %}
+<div class="group">
   <h3>{{group.name}}</h3>
   {% for user in group.users %}
     {%include 'strecklista/components/usercard.html' with user=user drinks=drinks %}
   {% endfor %}
+</div>
 {% endfor %}
