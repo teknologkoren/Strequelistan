@@ -47,8 +47,14 @@
 </div>
 
 <script>
+class NormalizedRegExp extends RegExp {
+  test(str) {                 // separate diacritics from "regular" chars, remove diacritics, and test again
+    return super.test(str) || super.test(str.normalize('NFKD').replace(/[^A-Za-z]/g, ""))
+  }
+}
+
 function doFilter() {
-  var re = new RegExp(this.value, "i");
+  var re = new NormalizedRegExp(this.value, "i");
   var cards = document.querySelectorAll(".user-card:not(.current-user)");
 
   for (var i = 0; i < cards.length; i++) {
@@ -65,7 +71,7 @@ function doFilter() {
 }
 
 function doInefficientFilter() {
-  var re = new RegExp(this.value, "i");
+  var re = new NormalizedRegExp(this.value, "i");
   var groups = document.getElementsByClassName("group");
 
   for (var i = 0; i < groups.length; i++) {
@@ -75,9 +81,9 @@ function doInefficientFilter() {
     for (var j = 0; j < cards.length; j++) {
       var nameEl = cards[j].querySelector(".display-name");
 
-      if (re.test(nameEl.innerHTML)
-        || re.test(nameEl.dataset.firstname)
-        || re.test(nameEl.dataset.lastname)) {
+      if (re.test(nameEl.dataset.firstname)
+          || re.test(nameEl.dataset.lastname)
+          || re.test(nameEl.dataset.nickname)) {
         cards[j].style.display = "";
         matches.push(cards[j]);
       } else {
