@@ -1,26 +1,9 @@
 {% extends 'strecklista/base.html' %}
 {% block content %}
+<style>
 {% include 'strecklista/components/quote.css' %}
+</style>
 
-<script>
-$(function() {
-  $('#quoteForm').on('submit', function(e) {
-    e.preventDefault();
-    var $form = $(this);
-
-    $.post('/submitQuote/', $form.serialize())
-      .then(function (html) {
-        $('#status').text('Citat sparat!')
-          .addClass('alert-success').removeClass('alert-danger');
-        $('#quoteDiv').prepend(html);
-        $form.find('input[type=text]').val('');
-      }, function (xhr) {
-        $('#status').text(xhr.responseText)
-          .removeClass('alert-success').addClass('alert-danger');
-      });
-  });
-});
-</script>
 {% include "strecklista/snippets/navbar.html" %}
 <div class="container">
   <h1>Citat</h1>
