@@ -323,6 +323,15 @@ def quote(request):
         'quotes': Quote.objects.order_by('-id'),
     })
 
+@login_required
+def singleQuote(request, quote_id):
+    return render(request, 'strecklista/single_quote.html', {
+        'form': QuoteForm(),
+        'quote': Quote.objects.filter(id=quote_id).first(),
+    })
+
+
+
 
 @login_required
 def product(request):

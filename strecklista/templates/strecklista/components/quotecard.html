@@ -4,4 +4,7 @@
     <div class="quotee">{{ quote.who }}</div>
     <div class="detail">{{ quote.timestamp }}</div>
   </div>
+  <div class="quote-link">
+    Permanent länk: <a href="{{ request.get_host }}/quote/{{ quote.id }}">{{ request.get_host }}/quote/{{ quote.id }}</a>
+  </div>
 </div>
