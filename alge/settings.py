@@ -86,7 +86,7 @@ INSTALLED_APPS = filter_non_strings([
     'django_extensions',
 ])
 
-MIDDLEWARE = filter_non_strings([
+MIDDLEWARE_CLASSES = filter_non_strings([
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
