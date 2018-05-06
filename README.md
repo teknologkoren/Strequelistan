@@ -18,23 +18,23 @@ You also need pdflatex in your path to be able to generate PDF's.
 packages and documentation and get by anyways.
 
 ## Developing
-1. Open `alge/settings.py` and enable debugging. Static files won't be served otherwise.
-```py
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+
+1. Create the database and apply the migrations with:
+```sh
+python3 manage.py migrate
 ```
 
-1. You need a user to access most parts of the site. Create a new superuser with:
+2. You need a user to access most parts of the site. Create a new superuser with:
 ```sh
 python3 manage.py createsuperuser
 ```
 
-1. Start the webserver by running
+3. Start the webserver by running
 ```sh
 python3 manage.py runserver
 ```
 
-1. Visit http://localhost:8000 and log in.
+4. Visit http://localhost:8000 and log in.
 
 ### LiveReload
 You can run a [LiveReload server](https://github.com/tjwalch/django-livereload-server)
