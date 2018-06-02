@@ -191,7 +191,8 @@ def profile(request, user_id):
                 if form.cleaned_data['phone_number'] and form.cleaned_data['phone_number'] != user.phone_number:
                     user.phone_number = form.cleaned_data['phone_number']
                 if form.cleaned_data['email'] and form.cleaned_data['email'] != user.email:
-                    user.email = form.cleaned_data['email']
+                    if not MyUser.objects.filter(email__iexact=form.cleaned_data['email']).exists():
+                        user.email = form.cleaned_data['email']
                 if form.cleaned_data['avatar']:
                     user.avatar = form.cleaned_data['avatar']
                 if form.cleaned_data['weight']:
