@@ -383,7 +383,7 @@ def requestPasswordReset(request):
         if form.is_valid() and MyUser.objects.filter(email__iexact=form.cleaned_data['email']).exists():
             pre = PasswordResetEmail()
             pre.key = pre.random_string()
-            pre.user = MyUser.objects.filter(email=form.cleaned_data['email']).first()
+            pre.user = MyUser.objects.filter(email__iexact=form.cleaned_data['email']).first()
             pre.save()
             pre.email_user()
         else:
