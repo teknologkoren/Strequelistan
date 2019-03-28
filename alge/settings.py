@@ -10,33 +10,49 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
+from configparser import ConfigParser
 import os
-
-#Load the config file. See config.py.sample for the structure
-import string
 import random
+import string
 
+
+# Load INI config if available. Otherwise, if config.py exists, convert it
+# to INI. Otherwise, just create a new one.
+config = ConfigParser()
+filename = "streque.ini"
+had_config = False
 try:
-    import alge.config as config
-except ImportError as e:
-    default_conf = """\
-# Remember to set the correct permissions for this file when in production.
-# This is done (in Linux) with the command:
-# chown *web server user*:*your user group* config.py && chmod 660 config.py
+    with open(filename) as file:
+        config.read_file(file)
+        had_config = True
+except:
+    try:
+        import alge.config as c
+        config.read_dict({
+            "main": {
+                "debug": "yes" if c.DEBUG else "no",
+                "secret_key": c.SECRET_KEY,
+            },
+            "email": {
+                "use_tls": "yes" if c.EMAIL_USE_TLS else "no",
+                "host": c.EMAIL_HOST or "",
+                "user": c.EMAIL_HOST_USER or "",
+                "password": c.EMAIL_HOST_PASSWORD or "",
+                "port": str(c.EMAIL_PORT),
+            },
+        })
+    except ImportError:
+        # Generate a new config file
+        char = lambda: random.choice(string.ascii_letters + string.digits)
+        config.read_dict({
+            "main": {
+                "secret_key": ''.join(char() for _ in range(50)),
+            },
+        })
 
-DEBUG = True                # False in a production environment
-SECRET_KEY = '{secret_key}'
-EMAIL_USE_TLS = True
-EMAIL_HOST = None           # smtp.gmail.com
-EMAIL_HOST_USER = None      # strecklistan@gmail.com
-EMAIL_HOST_PASSWORD = None  # Remember to set this
-EMAIL_PORT = 587
-""".format(secret_key=''.join(random.choice(string.ascii_letters + string.digits) for _ in range(50)))
-
-    with open("alge/config.py", "a") as f:
-        f.write(default_conf)
-
-    import alge.config as config
+if not had_config:
+    with open(filename, "w") as file:
+        config.write(file)
 
 
 def filter_non_strings(items):
@@ -51,15 +67,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config.SECRET_KEY
+SECRET_KEY = config.get("main", "secret_key")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-
-
-if 'DEBUG' in dir(config):
-    DEBUG =  config.DEBUG
-else:
-    DEBUG = True
+DEBUG = config.getboolean("main", "debug", fallback=False)
+if DEBUG:
+    print("NOTE: Running in DEBUG mode")
 
 ALLOWED_HOSTS = ["localhost", "streque.se", "www.streque.se"]
 
@@ -168,23 +181,21 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 
-#Media root (uploaded files)
-
+# Media root (uploaded files)
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = '/media/'
 
-#Gmail stpm settings
+# E-mail SMTP settings
+EMAIL_USE_TLS = config.getboolean("email", "use_tls", fallback=True)
+EMAIL_HOST = config.get("email", "host", fallback=None)
+EMAIL_HOST_USER = config.get("email", "user", fallback=None)
+EMAIL_HOST_PASSWORD = config.get("email", "password", fallback=None)
+EMAIL_PORT = config.getint("email", "port", fallback=587)
 
-EMAIL_USE_TLS = config.EMAIL_USE_TLS
-EMAIL_HOST = config.EMAIL_HOST
-EMAIL_HOST_USER = config.EMAIL_HOST_USER
-EMAIL_HOST_PASSWORD = config.EMAIL_HOST_PASSWORD
-EMAIL_PORT = config.EMAIL_PORT
-
-#url to login page
+# url to login page
 LOGIN_URL = '/login'
 
-#Custom user model:
+# Custom user model:
 AUTH_USER_MODEL = 'EmailUser.MyUser'
 
 REST_FRAMEWORK = {
@@ -202,7 +213,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
-    #Set page size so large numbers of data will be split up over multiple pages
+    # Set page size so large numbers of data will be split up over multiple pages
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 50,
     'MAX_PAGE_SIZE' : 200,
