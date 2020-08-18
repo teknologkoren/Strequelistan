@@ -24,7 +24,10 @@ urlpatterns = [
     url(r'^login', views.login, name='login'),
     url(r'^profile/(?P<user_id>[0-9]+)', views.profile, name='profile'),
     url(r'^bulkTransactions/', views.bulkTransactions, name='bulkTransactions'),
+
+    url(r'^quote/(?P<quote_id>[0-9]+)', views.singleQuote, name='singleQuote'),
     url(r'^quote/', views.quote, name='quote'),
+
     url(r'^submitQuote/', views.submitQuote, name='submitQuote'),
 
     url(r'^heddaHopper/', views.heddaHopper, name='heddaHopper'),

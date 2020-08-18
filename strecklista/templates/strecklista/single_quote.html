@@ -1,0 +1,17 @@
+{% extends 'strecklista/base.html' %}
+{% block content %}
+<style>
+{% include 'strecklista/components/quote.css' %}
+</style>
+
+{% include "strecklista/snippets/navbar.html" %}
+<div class="container">
+  <h1>Citat</h1>
+
+
+  <div id="quoteDiv">
+      {% include 'strecklista/components/quotecard.html' with quote=quote %}
+  </div>
+  <a href="/quote/">Visa alla citat</a>
+</div>
+{% endblock %}

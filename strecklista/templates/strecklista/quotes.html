@@ -1,39 +1,9 @@
 {% extends 'strecklista/base.html' %}
 {% block content %}
 <style>
-.card {
-  align-items: center;
-  box-shadow: 0 1px 5px 0 rgba(0,0,0,.3);
-  display: flex;
-  flex: 1;
-  margin: 1em .5em;
-  padding: 1em;
-  border-radius: 2px;
-  justify-content: space-between;
-}
-.card.quote {
-  align-items: inherit;
-  flex-direction: column;
-  font-size: 1.2em;
-}
-.quote-text {
-  font-size: 1.2em;
-}
-.quote-meta {
-  font-style: italic;
-  text-align: right;
-}
-.quotee::before {
-  content: '\2014\00a0';
-}
-.detail {
-  color: #555;
-  font-size: .75em;
-}
-#status:not(.alert-success):not(.alert-danger) {
-  display: none;
-}
+{% include 'strecklista/components/quote.css' %}
 </style>
+
 <script>
 $(function() {
   $('#quoteForm').on('submit', function(e) {
