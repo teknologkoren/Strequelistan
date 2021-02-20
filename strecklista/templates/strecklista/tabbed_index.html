@@ -132,7 +132,7 @@
   color: #333;
 }
 
-.tabs > .tab-option[aria-selected] {
+.tabs > .tab-option[aria-selected=true] {
   color: firebrick;
   font-weight: bold;
 }
@@ -160,17 +160,17 @@
   -webkit-overflow-scrolling: touch;
 }
 </style>
-<div class="tabs">
-  <div class="tab-option" aria-selected>
-    <i class="material-icons">local_bar</i>
+<div class="tabs" role="tablist">
+  <div class="tab-option" role="tab" aria-selected="true">
+    <i class="material-icons" aria-hidden="true">local_bar</i>
     <span>Streque</span>
   </div>
-  <div class="tab-option">
-    <i class="material-icons">list</i>
+  <div class="tab-option" role="tab" aria-selected="false">
+    <i class="material-icons" aria-hidden="true">list</i>
     <span>Dryckeslista</span>
   </div>
-  <div class="tab-option">
-    <i class="material-icons">history</i>
+  <div class="tab-option" role="tab" aria-selected="false">
+    <i class="material-icons" aria-hidden="true">history</i>
     <span>Historik</span>
   </div>
   <script>
@@ -187,7 +187,7 @@
       var $tab = $(this);
       $('.tabs-container').css('transform', 'translate3d(-' + $tab.index() + '00vw,0,0)');
 
-      $('.tabs > div').removeAttr('aria-selected');
+      $('.tabs > div').attr('aria-selected', false);
       $tab.attr('aria-selected', true);
 
       var pos = offset('tab-option', e.target, {
